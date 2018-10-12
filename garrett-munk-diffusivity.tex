@@ -1,0 +1,192 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PREAMBLE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% The following two commands will generate a PDF that follows all the requirements for submission
+% and peer review.  Uncomment these commands to generate this output (and comment out the two lines below.)
+%
+% DOUBLE SPACE VERSION FOR SUBMISSION TO THE AMS
+%\documentclass[12pt]{article}
+%\usepackage{ametsoc}
+%\linenumbers
+%
+% The following two commands will generate a single space, double column paper that closely
+% matches an AMS journal page.  Uncomment these commands to generate this output (and comment
+% out the two lines above. FOR AUTHOR USE ONLY. PAPERS SUBMITTED IN THIS FORMAT WILL BE RETURNED
+% TO THE AUTHOR for submission with the correct formatting.
+%
+% TWO COLUMN JOURNAL PAGE LAYOUT FOR AUTHOR USE ONLY
+\documentclass[10pt]{article}
+\usepackage{ametsoc2col}
+\usepackage{dblfloatfix}
+
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ABSTRACT
+%
+% Enter your Abstract here
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\myabstract}{Abstrat}
+%
+\begin{document}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TITLE
+%
+% Enter your TITLE here
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{\textbf{\large{Lateral diffusivity from internal waves}}}
+%
+% Author names, with corresponding author information. 
+% [Update and move the \thanks{...} block as appropriate.]
+%
+\author{\textsc{J. J. Early,}
+				\thanks{\textit{Corresponding author address:} 
+				Jeffrey J. Early, NorthWest Research Associates, 
+				4118 148th Ave NE, Redmond, WA 98052. 
+				\newline{E-mail: jearly@nwra.com}}\quad\textsc{et al.}
+%                 \textsc{C. Wortham \& M. P. Lelong}\\
+}
+%
+% Formatting done here...Authors should skip over this.  See above for abstract.
+\ifthenelse{\boolean{dc}}
+{
+\twocolumn[
+\begin{@twocolumnfalse}
+\amstitle
+
+% Start Abstract (Enter your Abstract above.  Do not enter any text here)
+\begin{center}
+\begin{minipage}{13.0cm}
+\begin{abstract}
+	\myabstract
+	\newline
+	\begin{center}
+		\rule{38mm}{0.2mm}
+	\end{center}
+\end{abstract}
+\end{minipage}
+\end{center}
+\end{@twocolumnfalse}
+]
+}
+{
+\amstitle
+\begin{abstract}
+\myabstract
+\end{abstract}
+\newpage
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MAIN BODY OF PAPER
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%
+%
+\section{Introduction}
+%
+%%%%%%%%%%%%%%%%%%%%%%
+What is the lateral diffusivity from internal waves with a canonical Garrett-Munk spectrum?
+\begin{itemize}
+\item Achieving steady-state
+\item Steady-state frequency and wavenumber spectra comparison to GM
+\item Assessing linearity of nonlinear simulations
+\item Diffusivity as function of depth and energy
+\item Repeat for exponential stratification
+\end{itemize}
+
+\begin{figure*}[t]
+  \centerline{\includegraphics[width=39pc,angle=0]{figures/HorizontalVelocitySpectrum}}
+  \caption{Horizontal velocity spectrum from the nonlinear steady-state run, at three different depths. The Garrett-Munk reference spectrum at those same depths is draw in dashed lines.}
+  \label{HorizontalVelocitySpectrum}
+\end{figure*}
+
+\begin{figure*}[t]
+  \centerline{\includegraphics[width=39pc,angle=0]{figures/Energy-nonlinear}}
+  \caption{Total depth integrated energy for the nonlinear run separated into wave and vortex components. The linear run looks identical. The Rossby radius is drawn in white on the vortex plot. Notice the different scales in the two plots}
+  \label{Energy-nonlinear}
+\end{figure*}
+
+\begin{figure}[t]
+  \centerline{\includegraphics[width=19pc,angle=0]{figures/EnergyFraction-nonlinear}}
+  \caption{Fraction of energy in the wave component of the linear decomposition. }
+  \label{EnergyFraction-nonlinear}
+\end{figure}
+
+\begin{figure}[t]
+  \centerline{\includegraphics[width=19pc,angle=0]{figures/Autocorrelation_k_8_j_2}}
+  \caption{Example linear wave components as a time series (top). The autocorrelation function of all linear wave components in that band. The standard error is drawn in black.}
+  \label{Autocorrelation_k_8_j_2}
+\end{figure}
+
+\begin{figure}[t]
+  \centerline{\includegraphics[width=19pc,angle=0]{figures/Autocorrelation_k_20_j_27}}
+  \caption{Example linear wave components as a time series (top). The autocorrelation function of all linear wave components in that band. The standard error is drawn in black.}
+  \label{Autocorrelation_k_20_j_27}
+\end{figure}
+
+\begin{figure}[t]
+  \centerline{\includegraphics[width=19pc,angle=0]{figures/Autocorrelation_k_12_j_228}}
+  \caption{Example linear wave components as a time series (top). The autocorrelation function of all linear wave components in that band. The standard error is drawn in black.}
+  \label{Autocorrelation_k_12_j_228}
+\end{figure}
+
+\begin{figure}[t]
+  \centerline{\includegraphics[width=19pc,angle=0]{figures/WaveNonlinearity}}
+  \caption{Ratio of the variance around the linear mean to the total variance.}
+  \label{WaveNonlinearity}
+\end{figure}
+
+\begin{figure}[t]
+  \centerline{\includegraphics[width=19pc,angle=0]{figures/VortexNonlinearity}}
+  \caption{Ratio of the variance around the linear mean to the total variance.}
+  \label{VortexNonlinearity}
+\end{figure}
+
+\begin{figure*}[t]
+  \centerline{\includegraphics[width=39pc,angle=0]{figures/DiffusivityVsScaleLinNonlin}}
+  \caption{Horizontal relative diffusivity as a function of spatial separation.}
+  \label{DiffusivityVsScaleLinNonlin}
+\end{figure*}
+
+%% Create a bibliography directory and place your .bib file there.
+%% -REMOVE ALL DIRECTORY PATHS TO REFERENCE FILES BEFORE SUBMITTING TO THE AMS FOR PEER REVIEW
+\ifthenelse{\boolean{dc}}
+{}
+{\clearpage}
+\bibliographystyle{ametsoc}
+\bibliography{references}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% FIGURES-REMOVE ALL DIRECTORY PATHS TO FIGURE FILES BEFORE SUBMITTING TO THE AMS FOR PEER REVIEW
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{figure}[t]
+%  \noindent\includegraphics[width=19pc,angle=0]{figure01.pdf}\\
+%  \caption{Enter the caption for your figure here.  Repeat as
+%  necessary for each of your figures. Figure from \protect\cite{Knutti2008}.}\label{f1}
+%\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% TABLES
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{table}[t]
+%\caption{This is a sample table caption and table layout.  Enter as many tables as
+%  necessary at the end of your manuscript. Table from Lorenz (1963).}\label{t1}
+%\begin{center}
+%\begin{tabular}{ccccrrcrc}
+%\hline\hline
+%$N$ & $X$ & $Y$ & $Z$\\
+%\hline
+% 0000 & 0000 & 0010 & 0000 \\
+% 0005 & 0004 & 0012 & 0000 \\
+% 0010 & 0009 & 0020 & 0000 \\
+% 0015 & 0016 & 0036 & 0002 \\
+% 0020 & 0030 & 0066 & 0007 \\
+% 0025 & 0054 & 0115 & 0024 \\
+%\hline
+%\end{tabular}
+%\end{center}
+%\end{table}
+%
+\end{document}

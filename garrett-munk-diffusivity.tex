@@ -97,11 +97,31 @@ What is the lateral diffusivity from internal waves with a canonical Garrett-Mun
 \item Repeat for exponential stratification
 \end{itemize}
 
+%%%%%%%%%%%%%%%%%%%%%%
+%
+\section{Steady-state conditions}
+%
+%%%%%%%%%%%%%%%%%%%%%%
+
+Here we show that we have achieved steady-state conditions that look like a canonical Garrett-Munk spectrum.
+
+Figure \ref{HorizontalVelocitySpectrum} shows the horizontal kinetic energy spectrum, as deduced by looking the horizontal velocity time series from fixed points in the domain. The spectra match  GM reference out to about 5 cycles per day.
+
 \begin{figure*}[t]
   \centerline{\includegraphics[width=39pc,angle=0]{figures/HorizontalVelocitySpectrum}}
   \caption{Horizontal velocity spectrum from the nonlinear steady-state run, at three different depths. The Garrett-Munk reference spectrum at those same depths is draw in dashed lines.}
   \label{HorizontalVelocitySpectrum}
 \end{figure*}
+
+%%%%%%%%%%%%%%%%%%%%%%
+%
+\section{Nonlinearity}
+%
+%%%%%%%%%%%%%%%%%%%%%%
+
+To assess the nonlinearity of the simulations we project the dynamical variables $u$, $v$, $w$, and $\rho^\prime$ onto the linear solution at each time. This projection is exact and complete in the sense that all energy is accounted for and the projection is unique. The projection is such that each wavenumber and mode number $(k,l,j)$ is divided into three parts: positive wave solution, negative wave solution, and vortex (geostrophic) solution.
+
+Assuming isotropy, figure \ref{Energy-nonlinear} shows the depth-integrated energy divided between the wave and vortex components as a function of vertical mode number and horizontal wavelength. 
 
 \begin{figure*}[t]
   \centerline{\includegraphics[width=39pc,angle=0]{figures/Energy-nonlinear}}

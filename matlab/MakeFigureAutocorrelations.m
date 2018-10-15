@@ -53,19 +53,19 @@ end
 iVars = 1:4;
 iMode = 2;
 iK = 8;
-titlestring = sprintf('Linear wave coefficients (k,j) = (%d,%d)',iK,iMode);
+titlestring = sprintf('Linear wave coefficients (k,j) = (%d km,%d)',round(2*pi/kAxis(iK)/1e3),iMode);
 
 % Partiatially nonlinear
 iVars = 5:6;
 iMode = 27;
 iK = 20;
-titlestring = sprintf('Linear vortex coefficients (k,j) = (%d,%d)',iK,iMode);
+titlestring = sprintf('Linear vortex coefficients (k,j) = (%d km,%d)',round(2*pi/kAxis(iK)/1e3),iMode);
 
 % Fully nonlinear
 iVars = 1:4;
 iMode = 228;
 iK = 12;
-titlestring = sprintf('Linear wave coefficients (k,j) = (%d,%d)',iK,iMode);
+titlestring = sprintf('Linear wave coefficients (k,j) = (%d km,%d)',round(2*pi/kAxis(iK)/1e3),iMode);
 
 ExampleSeries = zeros(length(t),5);
 
@@ -124,7 +124,7 @@ plot(t/86400,ExampleSeries,'LineWidth', 2), hold on
 plot(t/86400,ones(size(t))*2*sqrt(mean(HKEhist)),'Color',0.5*[1 1 1],'LineWidth', 2)
 plot(t/86400,-ones(size(t))*2*sqrt(mean(HKEhist)),'Color',0.5*[1 1 1],'LineWidth', 2)
 ylim([-1.1 1.1]*max(max(ExampleSeries)))
-ylabel('m^3/s^2', 'FontSize', figure_axis_label_size, 'FontName', figure_font)
+ylabel('m^{3/2}/s', 'FontSize', figure_axis_label_size, 'FontName', figure_font)
 title(titlestring)
 
 subplot(2,1,2)

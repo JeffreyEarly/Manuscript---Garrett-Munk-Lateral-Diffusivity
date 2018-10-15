@@ -11,7 +11,7 @@
 scaleFactor = 1;
 LoadFigureDefaults;
 
-runtype = 'linear';
+runtype = 'nonlinear';
 
 % Needed just to pull out resolution information
 
@@ -143,6 +143,13 @@ ylabel(cb, 'time (days)', 'FontSize', figure_axis_label_size, 'FontName', figure
 % Wave/Vortex energy
 %
 
+% These are the values iMode, iK used in the MakeFiguresAutocorrelations
+ExampleWaveJ = [2 228];
+ExampleWaveK = [8 12];
+
+ExampleVortexJ = 27;
+ExampleVortexK = 20;
+
 % Compute the Rossby radius of deformation for each geostrophic mode
 N0 = 5.2e-3;
 D = 4000;
@@ -168,6 +175,8 @@ p1 = subplot(1,3,1);
 pcolor( k, j, log10(waveHKE.') ), xlog, ylog, shading flat, hold on
 plot( k_damp, j_damp, 'LineWidth', 4, 'Color', 0*[1 1 1])
 plot( k_damp, j_damp, 'LineWidth', 2, 'Color', [1 1 1])
+scatter( k(ExampleWaveK), ExampleWaveJ, 25, 0*[1 1 1], 'filled' );
+scatter( k(ExampleWaveK), ExampleWaveJ, 8, 1*[1 1 1], 'filled' );
 % plot( sqrt(N2(GM.zInternal)), axis_depth, 'LineWidth', 2.0*scaleFactor, 'Color', 1.0*[1 1 1])
 caxis([-10 0])
 set( gca, 'FontSize', figure_axis_tick_size);
@@ -193,6 +202,8 @@ p2 = subplot(1,3,2);
 pcolor( k, j, log10(vortexHKE.') ), xlog, ylog, shading flat, hold on
 plot( k_damp, j_damp, 'LineWidth', 4, 'Color', 0*[1 1 1])
 plot( k_damp, j_damp, 'LineWidth', 2, 'Color', [1 1 1])
+scatter( k(ExampleVortexK), ExampleVortexJ, 25, 0*[1 1 1], 'filled' );
+scatter( k(ExampleVortexK), ExampleVortexJ, 8, 1*[1 1 1], 'filled' );
 caxis([-10 -5])
 set( gca, 'FontSize', figure_axis_tick_size);
 set(gca, 'YTick', []);

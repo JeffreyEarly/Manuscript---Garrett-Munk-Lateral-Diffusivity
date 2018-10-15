@@ -98,7 +98,7 @@ colormap( cmocean('dense') );
 cb = colorbar('eastoutside');
 caxis([0 1])
 
-% print('-dpng', '-r300', sprintf('WaveNonlinearity.png'))
+print('-dpng', '-r300', sprintf('WaveNonlinearity.png'))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -129,4 +129,4 @@ colormap( cmocean('dense') );
 cb = colorbar('eastoutside');
 caxis([0 1])
 
-% print('-dpng', '-r300', sprintf('VortexNonlinearity.png'))
+print('-dpng', '-r300', sprintf('VortexNonlinearity.png'))

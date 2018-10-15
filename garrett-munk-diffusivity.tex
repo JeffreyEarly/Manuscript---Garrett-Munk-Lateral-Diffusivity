@@ -121,19 +121,23 @@ Figure \ref{HorizontalVelocitySpectrum} shows the horizontal kinetic energy spec
 
 To assess the nonlinearity of the simulations we project the dynamical variables $u$, $v$, $w$, and $\rho^\prime$ onto the linear solution at each time. This projection is exact and complete in the sense that all energy is accounted for and the projection is unique. The projection is such that each wavenumber and mode number $(k,l,j)$ is divided into three parts: positive wave solution, negative wave solution, and vortex (geostrophic) solution.
 
-Assuming isotropy, figure \ref{Energy-nonlinear} shows the depth-integrated energy divided between the wave and vortex components as a function of vertical mode number and horizontal wavelength. 
+Assuming isotropy, figure \ref{Energy-nonlinear} shows the depth-integrated energy divided between the wave and vortex components as a function of vertical mode number and horizontal wavelength. The key takeaways from figure \ref{Energy-nonlinear} are,
+\begin{itemize}
+    \item Wave energy decreases in mode and wavenumber, as one would expected from a Garrett-Munk spectrum.
+    \item The region identified as damping delineates a region of rapid energy falloff, as one would expect.
+    \item There does exist vortex energy in steady-state, and it appears to be in a region roughly bordered by the Rossby radius for each mode.
+    \item Outside of the damping region, the energy in these model runs is almost entirely waves. Only in low mode, high wavenumber region does there appear to be any significant fraction of energy in vortices, but only as much as 0.1\%.
+\end{itemize}
 
 \begin{figure*}[t]
-  \centerline{\includegraphics[width=39pc,angle=0]{figures/Energy-nonlinear}}
-  \caption{Total depth integrated energy for the nonlinear run separated into wave and vortex components. The linear run looks identical. The Rossby radius is drawn in white on the vortex plot. Notice the different scales in the two plots}
+  \centerline{\includegraphics[width=39pc,angle=0]{figures/EnergyAndEnergyFraction-nonlinear}}
+  \caption{Total depth integrated energy for the nonlinear run separated into wave and vortex components. The white contour separates the region affected by damping. The Rossby radius is drawn in white on the vortex plot. Notice the different scales in the two plots. The third panel shows the fraction of total energy that is in the wave component.}
   \label{Energy-nonlinear}
 \end{figure*}
 
-\begin{figure}[t]
-  \centerline{\includegraphics[width=19pc,angle=0]{figures/EnergyFraction-nonlinear}}
-  \caption{Fraction of energy in the wave component of the linear decomposition. }
-  \label{EnergyFraction-nonlinear}
-\end{figure}
+The primary reason for doing the wave-vortex decomposition is that it allows us to assess how linear or nonlinear the model is behaving. Performing the wave-vortex decomposition on the linear model run results in coefficients that remain perfectly constant in time (other than the effects of damping). This mean that any time variation of the wave-vortex coefficients from the nonlinear run, must be the result of nonlinearity.
+
+Figures \ref{Autocorrelation_k_8_j_2} and \ref{Autocorrelation_k_12_j_228} show the value of five wave coefficients over time. The particle wave coefficients shown are chosen at random, but from two different regions in wavenumber space. In particular, figure \ref{Autocorrelation_k_8_j_2} shows coefficients from low mode and wavenumber, while figure  \ref{Autocorrelation_k_12_j_228} shows wave coefficients from a high vertical mode region.
 
 \begin{figure}[t]
   \centerline{\includegraphics[width=19pc,angle=0]{figures/Autocorrelation_k_8_j_2}}

@@ -11,16 +11,10 @@
 scaleFactor = 1;
 LoadFigureDefaults;
 
-runtype = 'linear';
-
-% Needed just to pull out resolution information
-
+runtype = 'nonlinear';
 
 if strcmp(runtype,'linear')
     load('EarlyEtal_GM_LIN_unforced_3600000s_restart_decomp');
-    NonlinearSteadyStateFile = '/Volumes/Samsung_T5/nsf_iwv/model_raw/EarlyEtal_GM_LIN_unforced_3600000s_restart';
-    t = 863750;
-    j=1:256;
 elseif strcmp(runtype,'nonlinear')
 %     load('EarlyEtal_GM_NL_35e-11_36000s_restart_decomp.mat');
     load('/Volumes/Samsung_T5/nsf_iwv/EarlyEtal_GM_NL_35e-11_36000s_restart_decomp.mat');
@@ -173,7 +167,7 @@ caxis([-10 0])
 set( gca, 'FontSize', figure_axis_tick_size);
 % set(gca, 'YTick', 1000*(-5:1:0));
 % ylabel('depth (m)', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
-title('wave energy (m^3/s^2)', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
+title('wave energy', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
 
 xticks(ticks_x)
 xticklabels(labels_x)
@@ -255,11 +249,11 @@ caxis(abs(log10(1-[(0.5) (0.99999)])))
 cb3.Ticks = abs(log10(1-[(0.5) (0.9) (0.99) (0.999) (0.9999) (0.99999)]));
 cb3.TickLabels = {'50%', '90%', '99%', '99.9%', '99.99%', '99.999%'};
 
+print('-dpng', '-r300', sprintf('EnergyAndFraction-%s.png',runtype))
+
 p1.OuterPosition = [0 p1.OuterPosition(2) 0.28 p1.OuterPosition(4)];
 p1.Position = [p1.Position(1) p1.Position(2) 0.20 p1.Position(4)];
 p2.OuterPosition = [0.36 p2.OuterPosition(2) 0.28 p2.OuterPosition(4)];
 p2.Position = [p2.Position(1) p2.Position(2) 0.20 p2.Position(4)];
 p3.OuterPosition = [0.66 p3.OuterPosition(2) 0.28 p3.OuterPosition(4)];
 p3.Position = [p3.Position(1) p3.Position(2) 0.20 p3.Position(4)];
-
-print('-dpng', '-r300', sprintf('EnergyAndEnergyFraction-%s.png',runtype))

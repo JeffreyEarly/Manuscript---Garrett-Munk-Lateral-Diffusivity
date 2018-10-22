@@ -1,7 +1,7 @@
 scaleFactor = 1;
 LoadFigureDefaults;
 
-mooringsfile = 'EarlyEtal_GM_NL_35e-11_36000s_restart_moorings.mat';
+mooringsfile = '../data/2018_10/EarlyV2_GM_NL_forced_damped_moorings.mat';
 
 load(mooringsfile)
 
@@ -50,4 +50,4 @@ legend(labels)
 
 xlim([-15 15])
 
-print('-depsc','HorizontalVelocitySpectrum.eps')
+print('-depsc','HorizontalVelocitySpectrum2.eps')

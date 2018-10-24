@@ -10,24 +10,23 @@ nT = length(t);
 nDepths = length(depths);
 
 dt = t(2)-t(1);
-S = zeros(nT,nDepths);
+S = zeros(round(nT/2),nDepths);
 for iDepth = 1:nDepths
-    cv_mooring = squeeze(u3d(:,iDepth,:) + sqrt(-1)*v3d(:,iDepth,:)).';
-    [omega_p, Spp, Snn, Spn] = mspec(dt,cv_mooring,[]);
-    omega = [ -flipud(omega_p(2:end)); omega_p];
-    S(:,iDepth) = (1/(2*pi))*[flipud(vmean(Snn,2)); vmean(Spp(2:end,:),2)];
+    v_mooring = squeeze(w3d(:,iDepth,:)).';
+    [omega, Spp] = mspec(dt,v_mooring,[]);
+    S(:,iDepth) = (1/(2*pi))*vmean(Spp,2);
 end
 
 FigureSize = [50 50 figure_width_2col+8 225*scaleFactor];
-fig1 = figure('Units', 'points', 'Position', FigureSize,'Name','Horizontal Velocity Spectrum');
+fig1 = figure('Units', 'points', 'Position', FigureSize,'Name','Vertical Velocity Spectrum');
 set(gcf, 'Color', 'w');
 fig1.PaperUnits = 'points';
 fig1.PaperPosition = FigureSize;
 fig1.PaperSize = [FigureSize(3) FigureSize(4)];
 
 
-GM = GarrettMunkSpectrumConstantStratification(N0/2,[-Lz 0],latitude);
-S_theory = GM.HorizontalVelocitySpectrumAtFrequencies(depths,omega)';
+GM = GarrettMunkSpectrumConstantStratification(N0,[-Lz 0],latitude);
+S_theory = GM.VerticalVelocitySpectrumAtFrequencies(depths,omega)';
 S_theory( S_theory<1e-4 ) = nan;
 semilogy(omega*86400/(2*pi),S_theory,'--','LineWidth', 2)
 
@@ -38,7 +37,7 @@ plot(omega*86400/(2*pi),S, 'LineWidth', 2)
 
 hold on, 
 
-xlabel('frequency (cycles per day)'), ylabel('m^2/s^2'), title('horizontal velocity power spectrum')
+xlabel('frequency (cycles per day)'), ylabel('m^2/s^2'), title('vertical velocity power spectrum')
 
 % labels = cell(length(depths)*2,1);
 % for i=1:length(depths)
@@ -49,6 +48,7 @@ xlabel('frequency (cycles per day)'), ylabel('m^2/s^2'), title('horizontal veloc
 % end
 % legend(labels)
 
-xlim([-15 15])
+xlim([0 12])
+
 
 % print('-depsc','HorizontalVelocitySpectrum2.eps')

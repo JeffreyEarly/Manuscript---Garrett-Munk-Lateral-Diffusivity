@@ -22,9 +22,7 @@ if strcmp(runtype,'linear')
     t = 863750;
     j=1:256;
 elseif strcmp(runtype,'nonlinear')
-%     load('EarlyEtal_GM_NL_35e-11_36000s_restart_decomp.mat');
-    load('/Volumes/Samsung_T5/nsf_iwv/EarlyEtal_GM_NL_35e-11_36000s_restart_decomp.mat');
-    NonlinearSteadyStateFile = '/Volumes/Samsung_T5/nsf_iwv/model_raw/EarlyEtal_GM_NL_35e-11_36000s_restart';
+    load('../data/2018_10/EarlyV2_GM_NL_forced_damped_decomp.mat');
 else
     error('invalid run type.');
 end
@@ -34,23 +32,16 @@ end
 % Compute the damping scales
 %
 
-if ~exist('WM','var')
-    WM = WintersModel(NonlinearSteadyStateFile);
-    wavemodel = WM.wavemodel;
-end
-
-T_diss = 36000;
-p = 3;
-dx = wavemodel.x(2)-wavemodel.x(1);
-dz = wavemodel.z(2)-wavemodel.z(1);
+dx = x(2)-x(1);
+dz = z(2)-z(1);
 nu_x = (-1)^(p+1)*power(dx/pi,2*p) / T_diss;
 nu_z = (-1)^(p+1)*power(dz/pi,2*p) / T_diss;
 
-nK = length(wavemodel.k)/2 + 1;
-k_diss = abs(wavemodel.k(1:nK));
-j_diss = 0:max(wavemodel.j); % start at 0, to help with contour drawing
+nK = length(k)/2 + 1;
+k_diss = abs(k(1:nK));
+j_diss = 0:max(j); % start at 0, to help with contour drawing
 [K,J] = ndgrid(k_diss,j_diss);
-M = (2*pi/(length(wavemodel.j)*dz))*J/2;
+M = (2*pi/(length(j)*dz))*J/2;
 
 lambda_x = nu_x*(sqrt(-1)*K).^(2*p);
 lambda_z = nu_z*(sqrt(-1)*M).^(2*p);

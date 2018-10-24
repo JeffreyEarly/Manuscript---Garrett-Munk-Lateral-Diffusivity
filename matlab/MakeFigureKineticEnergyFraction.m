@@ -14,13 +14,8 @@ LoadFigureDefaults;
 runtype = 'nonlinear';
 
 % Needed just to pull out resolution information
-
-
 if strcmp(runtype,'linear')
-    load('EarlyEtal_GM_LIN_unforced_3600000s_restart_decomp');
-    NonlinearSteadyStateFile = '/Volumes/Samsung_T5/nsf_iwv/model_raw/EarlyEtal_GM_LIN_unforced_3600000s_restart';
-    t = 863750;
-    j=1:256;
+
 elseif strcmp(runtype,'nonlinear')
     load('../data/2018_10/EarlyV2_GM_NL_forced_damped_decomp.mat');
 else
@@ -127,7 +122,7 @@ cb = colorbar('eastoutside');
 cb.Ticks = [0 2 4 6 8 10];
 ylabel(cb, 'time (days)', 'FontSize', figure_axis_label_size, 'FontName', figure_font)
 
-% print('-dpng', '-r300', sprintf('DecorrelationTime-%s.png',runtype))
+print('-dpng', '-r300', sprintf('DecorrelationTime-%s.png',runtype))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %

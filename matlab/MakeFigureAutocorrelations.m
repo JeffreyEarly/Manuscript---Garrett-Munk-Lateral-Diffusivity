@@ -123,7 +123,7 @@ subplot(2,1,1)
 plot(t/86400,ExampleSeries,'LineWidth', 2), hold on
 plot(t/86400,ones(size(t))*2*sqrt(mean(HKEhist)),'Color',0.5*[1 1 1],'LineWidth', 2)
 plot(t/86400,-ones(size(t))*2*sqrt(mean(HKEhist)),'Color',0.5*[1 1 1],'LineWidth', 2)
-ylim([-1.1 1.1]*max(max(ExampleSeries)))
+ylim([-1.1 1.1]*max(max(max(ExampleSeries)),2*sqrt(mean(HKEhist))))
 ylabel('m^{3/2}/s', 'FontSize', figure_axis_label_size, 'FontName', figure_font)
 title(titlestring)
 

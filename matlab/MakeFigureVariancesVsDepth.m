@@ -33,6 +33,7 @@ NonlinearSteadyStateFile = strcat(baseURL,'EarlyV2_GM_NL_forced_damped');
 LinearSteadyStateFile = strcat(baseURL,'EarlyV2_GM_LIN_unforced_damped');
 
 WM = WintersModel(NonlinearSteadyStateFile);
+wavemodel = WM.wavemodel;
 [t,u,v,w,eta] = WM.VariableFieldsFrom3DOutputFileAtIndex(1,'t','u','v','w','zeta');
 Euv_model = squeeze(mean(mean(u.^2 + v.^2,1),2));
 Eeta_model = squeeze(mean(mean(eta.^2,1),2));
@@ -64,24 +65,26 @@ fig1.PaperSize = [FigureSize(3) FigureSize(4)];
 subplot(1,3,1)
 plot(1e4*Euv,z), hold on
 plot(1e4*Euv_const,z)
-plot(1e4*Euv_model,z)
+plot(1e4*Euv_model,wavemodel.z)
 set( gca, 'FontSize', figure_axis_tick_size);
 xlabel('E\langle{u^2+v^2}\rangle (cm^2/s^2)', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
 ylabel('depth (m)', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
 subplot(1,3,2)
 plot(Eeta,z), hold on
 plot(Eeta_const,z)
-plot(Eeta_model,z)
+plot(Eeta_model,wavemodel.z)
 set( gca, 'FontSize', figure_axis_tick_size);
 xlabel('E\langle\eta^2\rangle (m^2)', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
 set(gca, 'YTick', []);
 subplot(1,3,3)
 plot(1e4*Ew,z), hold on
 plot(1e4*Ew_const,z)
-plot(1e4*Ew_model,z)
+plot(1e4*Ew_model,wavemodel.z)
 set( gca, 'FontSize', figure_axis_tick_size);
 xlabel('E\langle{w^2}\rangle (cm^2/s^2)', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
 set(gca, 'YTick', []);
+
+print('-depsc','VariancesVsDepth.eps')
 
 % plot(1e4*(Euv + Ew + N2.*Eeta)/2,z), hold on
 % plot(1e4*(Euv_const + Ew_const + N0_const*N0_const.*Eeta_const)/2,z)
@@ -102,7 +105,7 @@ fig1.PaperSize = [FigureSize(3) FigureSize(4)];
 subplot(1,3,1)
 plot(1e4*Euv.*(N0./N),z), hold on
 plot(1e4*Euv_const.*(N0./N0_const),z)
-plot(1e4*Euv_model.*(N0./N0_const),z)
+plot(1e4*Euv_model.*(N0./N0_const),wavemodel.z)
 vlines(44,'k--')
 set( gca, 'FontSize', figure_axis_tick_size);
 xlabel('E\langle{u^2+v^2}\rangle (cm^2/s^2)', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
@@ -113,7 +116,7 @@ xlim([0 1.1*max(1e4*Euv.*(N0./N))])
 subplot(1,3,2)
 plot(Eeta.*(N/N0),z),hold on
 plot(Eeta_const*(N0_const/N0),z)
-plot(Eeta_model*(N0_const/N0),z)
+plot(Eeta_model*(N0_const/N0),wavemodel.z)
 vlines(53,'k--')
 set( gca, 'FontSize', figure_axis_tick_size);
 xlabel('E\langle\eta^2\rangle (m^2)', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
@@ -123,13 +126,15 @@ xlim([0 1.1*max(Eeta.*(N/N0))])
 subplot(1,3,3)
 plot(1e4*Ew.*(N/N0),z),hold on
 plot(1e4*Ew_const*(N0_const/N0),z)
-plot(1e4*Ew_model*(N0_const/N0),z)
+plot(1e4*Ew_model*(N0_const/N0),wavemodel.z)
 vlines(1e4*w2_gm,'k--')
 set( gca, 'FontSize', figure_axis_tick_size);
 xlabel('E\langle{w^2}\rangle (cm^2/s^2)', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
 set(gca, 'YTick', []);
 
 packfig(1,3)
+
+print('-depsc','VariancesVsDepthWKB.eps')
 
 E = 0.5*(Euv + Ew + N2.*Eeta);
 Etotal = trapz(z,E);

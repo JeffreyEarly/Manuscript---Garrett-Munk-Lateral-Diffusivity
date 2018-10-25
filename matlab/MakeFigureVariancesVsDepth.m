@@ -55,7 +55,10 @@ Euv_const = EnergyScale*GMConst.HorizontalVelocityVariance(z);
 Eeta_const = EnergyScale*GMConst.IsopycnalVariance(z);
 Ew_const = EnergyScale*GMConst.VerticalVelocityVariance(z);
 
-FigureSize = [50 50 figure_width_2col+8 225*scaleFactor];
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%
+FigureSize = [50 50 figure_width_1col+8 225*scaleFactor];
 fig1 = figure('Units', 'points', 'Position', FigureSize,'Name','VariancesVsDepth');
 set(gcf, 'Color', 'w');
 fig1.PaperUnits = 'points';
@@ -67,22 +70,38 @@ plot(1e4*Euv,z), hold on
 plot(1e4*Euv_const,z)
 plot(1e4*Euv_model,wavemodel.z)
 set( gca, 'FontSize', figure_axis_tick_size);
-xlabel('E\langle{u^2+v^2}\rangle (cm^2/s^2)', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
 ylabel('depth (m)', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
+xlabel('cm^2/s^2', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
+title('E\langle{u^2+v^2}\rangle', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
+
 subplot(1,3,2)
 plot(Eeta,z), hold on
 plot(Eeta_const,z)
 plot(Eeta_model,wavemodel.z)
 set( gca, 'FontSize', figure_axis_tick_size);
-xlabel('E\langle\eta^2\rangle (m^2)', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
+xlabel('m^2', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
+title('E\langle\eta^2\rangle', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
 set(gca, 'YTick', []);
+
+[leg, icons] = legend('exp','const','model');
+leg.Box = 'off';
+
+for i=4:2:8
+    icons(i).XData = icons(i).XData + [.3 0];
+end
+
 subplot(1,3,3)
 plot(1e4*Ew,z), hold on
 plot(1e4*Ew_const,z)
 plot(1e4*Ew_model,wavemodel.z)
 set( gca, 'FontSize', figure_axis_tick_size);
-xlabel('E\langle{w^2}\rangle (cm^2/s^2)', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
+xlabel('cm^2/s^2', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
+title('E\langle{w^2}\rangle', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
 set(gca, 'YTick', []);
+
+packfig(1,3);
+tightfig;
+leg.Position = leg.Position + [0.035 0.035 0 0];
 
 print('-depsc','VariancesVsDepth.eps')
 
@@ -93,9 +112,12 @@ print('-depsc','VariancesVsDepth.eps')
 % set(gca, 'YTick', []);
 % legend('Exponential profile (GM reference)', 'Constant stratification')
 
-packfig(1,3)
 
-FigureSize = [50 50 figure_width_2col+8 225*scaleFactor];
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%
+FigureSize = [50 50 figure_width_1col+8 225*scaleFactor];
 fig1 = figure('Units', 'points', 'Position', FigureSize,'Name','WKB VariancesVsDepth');
 set(gcf, 'Color', 'w');
 fig1.PaperUnits = 'points';
@@ -108,7 +130,8 @@ plot(1e4*Euv_const.*(N0./N0_const),z)
 plot(1e4*Euv_model.*(N0./N0_const),wavemodel.z)
 vlines(44,'k--')
 set( gca, 'FontSize', figure_axis_tick_size);
-xlabel('E\langle{u^2+v^2}\rangle (cm^2/s^2)', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
+xlabel('cm^2/s^2', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
+title('E\langle{u^2+v^2}\rangle', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
 ylabel('depth (m)', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
 xlim([0 1.1*max(1e4*Euv.*(N0./N))])
 % title('wkb scaled')
@@ -119,7 +142,8 @@ plot(Eeta_const*(N0_const/N0),z)
 plot(Eeta_model*(N0_const/N0),wavemodel.z)
 vlines(53,'k--')
 set( gca, 'FontSize', figure_axis_tick_size);
-xlabel('E\langle\eta^2\rangle (m^2)', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
+xlabel('m^2', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
+title('E\langle\eta^2\rangle', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
 set(gca, 'YTick', []);
 xlim([0 1.1*max(Eeta.*(N/N0))])
 
@@ -129,10 +153,13 @@ plot(1e4*Ew_const*(N0_const/N0),z)
 plot(1e4*Ew_model*(N0_const/N0),wavemodel.z)
 vlines(1e4*w2_gm,'k--')
 set( gca, 'FontSize', figure_axis_tick_size);
-xlabel('E\langle{w^2}\rangle (cm^2/s^2)', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
+xlabel('cm^2/s^2', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
+title('E\langle{w^2}\rangle', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
 set(gca, 'YTick', []);
 
-packfig(1,3)
+packfig(1,3);
+tightfig;
+
 
 print('-depsc','VariancesVsDepthWKB.eps')
 

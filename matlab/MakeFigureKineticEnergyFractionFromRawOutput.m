@@ -11,38 +11,89 @@
 scaleFactor = 1;
 LoadFigureDefaults;
 
-runtype = 'linear';
+runtype = 'nonlinear';
+ReadOverNetwork = 0;
 
-% Needed just to pull out resolution information
+if ReadOverNetwork == 1
+    baseURL = '/Volumes/seattle_data1/cwortham/research/nsf_iwv/model_raw/';
+else
+    baseURL = '/Volumes/Samsung_T5/nsf_iwv/model_raw/';
+end
+
 if strcmp(runtype,'linear')
-
+    file = strcat(baseURL,'EarlyV2_GM_LIN_unforced_damped');
 elseif strcmp(runtype,'nonlinear')
-    load('../data/2018_10/EarlyV2_GM_NL_forced_damped_decomp.mat');
-elseif strcmp(runtype,'nonlinear')
-    load('../data/2018_10/EarlyV2_GM_NL_forced_damped_decomp.mat');
+    file = strcat(baseURL,'EarlyV2_GM_NL_forced_damped'); 
 else
     error('invalid run type.');
 end
 
+WM = WintersModel(file);
+wavemodel = WM.wavemodel;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Do the wave-vortex decomposition
+%
+
+% These first two lines actually do the decomposition
+[t,u,v,w,rho_prime] = WM.VariableFieldsFrom3DOutputFileAtIndex(500,'t','u','v','w','rho_prime');
+wavemodel.InitializeWithHorizontalVelocityAndDensityPerturbationFields(t,u,v,rho_prime);
+
+waveHKE_full = wavemodel.Ppm_HKE_factor .* ( abs(wavemodel.Amp_plus).^2 + abs(wavemodel.Amp_minus).^2 );
+vortexHKE_full = wavemodel.P0_HKE_factor .* abs(wavemodel.B).^2;
+
+% Now we need to figure out how to display this information...
+
+% Create a reasonable wavenumber axis
+allKs = unique(reshape(abs(wavemodel.Kh),[],1),'sorted');
+deltaK = max(diff(allKs));
+kAxis = 0:deltaK:max(allKs);
+
+% Thi is the final output axis for wavenumber
+k = reshape(kAxis(1:(length(kAxis)-1)),[],1);
+
+% Mode axis is just what we already have
+j = wavemodel.j;
+
+Kh = wavemodel.Kh;
+RedundantCoefficients = InternalWaveModel.RedundantHermitianCoefficients(Kh);
+
+nK = length(k);
+nModes = length(j);
+
+waveHKE = zeros(nK,nModes);
+vortexHKE = zeros(nK,nModes);
+
+for iMode = 1:1:nModes
+    for iK = 1:1:nK
+        indicesForK = find( kAxis(iK) <= squeeze(Kh(:,:,1)) & squeeze(Kh(:,:,1)) < kAxis(iK+1)  & ~squeeze(RedundantCoefficients(:,:,1)) );
+        for iIndex = 1:length(indicesForK)
+            [i,m] = ind2sub([size(Kh,1) size(Kh,2)],indicesForK(iIndex));
+            waveHKE(iK,iMode) = waveHKE(iK,iMode) + waveHKE_full(i,m,iMode);
+            vortexHKE(iK,iMode) = vortexHKE(iK,iMode) + vortexHKE_full(i,m,iMode);
+        end
+    end
+end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % Compute the damping scales
 %
 
-dx = x(2)-x(1);
-dz = z(2)-z(1);
-nu_x = (-1)^(p+1)*power(dx/pi,2*p) / T_diss;
-nu_z = (-1)^(p+1)*power(dz/pi,2*p) / T_diss;
+dx = wavemodel.x(2)-wavemodel.x(1);
+dz = wavemodel.z(2)-wavemodel.z(1);
+nu_x = (-1)^(WM.p_x+1)*power(dx/pi,2*WM.p_x) / WM.T_diss_x;
+nu_z = (-1)^(WM.p_z+1)*power(dz/pi,2*WM.p_z) / WM.T_diss_z;
 
-nK = length(k)/2 + 1;
-k_diss = abs(k(1:nK));
-j_diss = 0:max(j); % start at 0, to help with contour drawing
+nK = length(wavemodel.k)/2 + 1;
+k_diss = abs(wavemodel.k(1:nK));
+j_diss = 0:max(wavemodel.j); % start at 0, to help with contour drawing
 [K,J] = ndgrid(k_diss,j_diss);
-M = (2*pi/(length(j)*dz))*J/2;
+M = (2*pi/(length(wavemodel.j)*dz))*J/2;
 
-lambda_x = nu_x*(sqrt(-1)*K).^(2*p);
-lambda_z = nu_z*(sqrt(-1)*M).^(2*p);
-tau = max(t);
+lambda_x = nu_x*(sqrt(-1)*K).^(2*WM.p_x);
+lambda_z = nu_z*(sqrt(-1)*M).^(2*WM.p_y);
+tau = WM.VariableFieldsFrom3DOutputFileAtIndex(WM.NumberOf3DOutputFiles,'t');
 R = exp((lambda_x+lambda_z)*tau);
 
 C = contourc(j_diss,k_diss,R,0.5*[1 1]);
@@ -90,11 +141,6 @@ im = InternalModesConstantStratification(N0,[-D 0],z,33);
 [F,G,h] = im.ModesAtFrequency(0.0);
 Lr = sqrt(9.81*h(j))/im.f0;
 kr = 1./Lr; % I think it should *not* be multiplied by 2*pi, because in the dispersion relation it adds directly to k and l.
-
-colorAxis = reshape(waveDecorrelationTime,[],1);
-colorAxis(isinf(colorAxis) | isnan(colorAxis)) = [];
-colorAxisMin = min(colorAxis);
-colorAxisMax = max(colorAxis);
 
 FigureSize = [50 50 figure_width_2col+8 225*scaleFactor];
 fig1 = figure('Units', 'points', 'Position', FigureSize,'Name','Wave-Vortex Energy');

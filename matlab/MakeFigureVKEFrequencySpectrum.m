@@ -2,7 +2,7 @@ scaleFactor = 1;
 LoadFigureDefaults;
 
 mooringsfile = '../data/2018_10/EarlyV2_GM_NL_forced_damped_moorings.mat';
-mooringsfile = '../data/2018_10/EarlyV2_GM_LIN_unforced_damped_moorings.mat';
+% mooringsfile = '../data/2018_10/EarlyV2_GM_LIN_unforced_damped_moorings.mat';
 
 load(mooringsfile)
 
@@ -49,6 +49,7 @@ xlabel('frequency (cycles per day)'), ylabel('m^2/s^2'), title('vertical velocit
 % legend(labels)
 
 xlim([0 12])
+ylim([5e-4 1.3e-2])
 
 
-% print('-depsc','HorizontalVelocitySpectrum2.eps')
+print('-depsc','VerticalVelocitySpectrum.eps')

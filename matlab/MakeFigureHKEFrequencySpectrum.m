@@ -11,11 +11,11 @@ nDepths = length(depths);
 
 dt = t(2)-t(1);
 S = zeros(nT,nDepths);
-for iDepth = 1:nDepths
+for iDepth = nDepths:-1:1
     cv_mooring = squeeze(u3d(:,iDepth,:) + sqrt(-1)*v3d(:,iDepth,:)).';
     [omega_p, Spp, Snn, Spn] = mspec(dt,cv_mooring,[]);
     omega = [ -flipud(omega_p(2:end)); omega_p];
-    S(:,iDepth) = (1/(2*pi))*[flipud(vmean(Snn,2)); vmean(Spp(2:end,:),2)];
+    S(:,nDepths-iDepth+1) = (1/(2*pi))*[flipud(vmean(Snn,2)); vmean(Spp(2:end,:),2)];
 end
 
 FigureSize = [50 50 figure_width_2col+8 225*scaleFactor];
@@ -27,7 +27,7 @@ fig1.PaperSize = [FigureSize(3) FigureSize(4)];
 
 
 GM = GarrettMunkSpectrumConstantStratification(N0/2,[-Lz 0],latitude);
-S_theory = GM.HorizontalVelocitySpectrumAtFrequencies(depths,omega)';
+S_theory = GM.HorizontalVelocitySpectrumAtFrequencies(flip(depths),omega)';
 S_theory( S_theory<1e-4 ) = nan;
 semilogy(omega*86400/(2*pi),S_theory,'--','LineWidth', 2)
 
@@ -40,15 +40,16 @@ hold on,
 
 xlabel('frequency (cycles per day)'), ylabel('m^2/s^2'), title('horizontal velocity power spectrum')
 
-% labels = cell(length(depths)*2,1);
-% for i=1:length(depths)
-%    labels{i} = sprintf('%d m, model',round(depths(i))); 
-% end
+labels = cell(length(depths),1);
+for iDepth=length(depths):-1:1
+   labels{iDepth} = sprintf('%d m',round(depths(nDepths-iDepth+1))); 
+end
 % for i=(length(depths)+1):length(depths)*2
 %    labels{i} = sprintf('%d m, GM',round(depths(i-3))); 
 % end
-% legend(labels)
+legend(labels)
 
-xlim([-15 15])
+xlim([-12 12])
+ylim([1e-3 2e2])
 
-% print('-depsc','HorizontalVelocitySpectrum2.eps')
+print('-depsc','HorizontalVelocitySpectrum.eps')

@@ -27,7 +27,7 @@
 %
 % Enter your Abstract here
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\myabstract}{Abstrat}
+\newcommand{\myabstract}{Abstract}
 %
 \begin{document}
 %
@@ -137,7 +137,14 @@ Assuming isotropy, figure \ref{Energy-nonlinear} shows the depth-integrated ener
 
 The primary reason for doing the wave-vortex decomposition is that it allows us to assess how linear or nonlinear the model is behaving. Performing the wave-vortex decomposition on the linear model run results in coefficients that remain perfectly constant in time (other than the effects of damping). This mean that any time variation of the wave-vortex coefficients from the nonlinear run, must be the result of nonlinearity.
 
-Figures \ref{Autocorrelation_k_8_j_2} and \ref{Autocorrelation_k_12_j_228} show the value of five wave coefficients over time. The particle wave coefficients shown are chosen at random, but from two different regions in wavenumber space. In particular, figure \ref{Autocorrelation_k_8_j_2} shows coefficients from low mode and wavenumber, while figure  \ref{Autocorrelation_k_12_j_228} shows wave coefficients from a high vertical mode region.
+Figures \ref{Autocorrelation_k_8_j_2} and \ref{Autocorrelation_k_12_j_228} show the value of five wave coefficients over time. The particle wave coefficients shown are chosen at random, but from two different regions in wavenumber space. In particular, figure \ref{Autocorrelation_k_8_j_2} shows coefficients from low mode and wavenumber, while figure  \ref{Autocorrelation_k_12_j_228} shows wave coefficients from a high vertical mode region. The key takeaways are,
+\begin{itemize}
+    \item Wave coefficients vary \emph{around} some mean value.
+    \item An alternative possibility for weak nonlinearity would be that the coefficients slowly decorrelate (drift away) from their previous value.
+    \item So the effects of nonlinearity are rapid (short time scale), but oscillate around a linear mean.
+    \item This is seen by a rapid drop in the autocorrelation sequence, but then flatlining (rather than slowly decaying autocorrelation sequence).
+    \item Near the more obviously nonlinear regions, the variance of the coefficient is larger than its mean.
+\end{itemize}
 
 \begin{figure}[t]
   \centerline{\includegraphics[width=19pc,angle=0]{figures/Autocorrelation_k_8_j_2}}
@@ -157,6 +164,19 @@ Figures \ref{Autocorrelation_k_8_j_2} and \ref{Autocorrelation_k_12_j_228} show 
   \label{Autocorrelation_k_12_j_228}
 \end{figure}
 
+We can construct a measure of nonlinearity. The time average energy for each coefficient can be divided into the time mean plus the variance over time. For a linear model run, there will be no variance in each coefficient (because the coefficients remain constant). Thus, a reasonable measure of nonlinearity is to take the ratio of the variance over time to the mean of the total energy,
+\begin{equation}
+    NL = \frac{\frac{1}{N_T}\sum \left( u -  \bar{u} \right)^2}{\frac{1}{N_T}\sum u^2}.
+\end{equation}
+This measure will give you exactly $0$ in the case of the linear model run, and exactly $1$ if the linear wave solution has no predictive power. Note that this measure of nonlinear works well \emph{given the known autocorrelation function} of the wave-vortex coefficients.
+
+Figure \ref{WaveNonlinearity} shows the nonlinearity for the wave and vortex components. Key takeaways are,
+\begin{itemize}
+    \item The waves are largely linear outside of the damping region.
+    \item There are hints of nonlinearity at high vertical wavenumber, and below the Rossby radius line. Which is cool!
+    \item Vortices are fairly nonlinear. The linear solution still has some predictive power outside the damping region (explaining roughly half the total variance).
+\end{itemize}
+
 \begin{figure}[t]
   \centerline{\includegraphics[width=19pc,angle=0]{figures/WaveNonlinearity}}
   \caption{Ratio of the variance around the linear mean to the total variance.}
@@ -168,6 +188,19 @@ Figures \ref{Autocorrelation_k_8_j_2} and \ref{Autocorrelation_k_12_j_228} show 
   \caption{Ratio of the variance around the linear mean to the total variance.}
   \label{VortexNonlinearity}
 \end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%
+%
+\section{Diffusivity}
+%
+%%%%%%%%%%%%%%%%%%%%%%
+
+Figure \ref{DiffusivityVsScaleLinNonlin} shows the relative diffusivity of particles at different scale for the linear run (top) and nonlinear run (bottom). Key takeaways are,
+\begin{itemize}
+    \item Linear and nonlinear diffusivities are indistinguishable (within statistical significance).
+    \item Horizontal diffusivity is greatest at the ocean boundaries.
+    \item Relatively diffusivity increases with scale.
+\end{itemize}
 
 \begin{figure*}[t]
   \centerline{\includegraphics[width=39pc,angle=0]{figures/DiffusivityVsScaleLinNonlin}}

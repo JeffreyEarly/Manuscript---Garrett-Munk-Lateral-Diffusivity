@@ -11,7 +11,7 @@
 scaleFactor = 1;
 LoadFigureDefaults;
 
-runtype = 'nonlinear';
+runtype = 'linear';
 ReadOverNetwork = 0;
 
 if ReadOverNetwork == 1
@@ -36,8 +36,10 @@ wavemodel = WM.wavemodel;
 % Do the wave-vortex decomposition
 %
 
+maxFileIndex = WM.NumberOf3DOutputFiles;
+
 % These first two lines actually do the decomposition
-[t,u,v,w,rho_prime] = WM.VariableFieldsFrom3DOutputFileAtIndex(500,'t','u','v','w','rho_prime');
+[t,u,v,w,rho_prime] = WM.VariableFieldsFrom3DOutputFileAtIndex(maxFileIndex,'t','u','v','w','rho_prime');
 wavemodel.InitializeWithHorizontalVelocityAndDensityPerturbationFields(t,u,v,rho_prime);
 
 waveHKE_full = wavemodel.Ppm_HKE_factor .* ( abs(wavemodel.Amp_plus).^2 + abs(wavemodel.Amp_minus).^2 );
@@ -80,6 +82,8 @@ end
 % Compute the damping scales
 %
 
+% Kraig Winters uses an e-fold time to set \nu_x in the hypervicous
+% operator. We start by computing \nu_x and \nu_z.
 dx = wavemodel.x(2)-wavemodel.x(1);
 dz = wavemodel.z(2)-wavemodel.z(1);
 nu_x = (-1)^(WM.p_x+1)*power(dx/pi,2*WM.p_x) / WM.T_diss_x;
@@ -93,10 +97,13 @@ M = (2*pi/(length(wavemodel.j)*dz))*J/2;
 
 lambda_x = nu_x*(sqrt(-1)*K).^(2*WM.p_x);
 lambda_z = nu_z*(sqrt(-1)*M).^(2*WM.p_y);
-tau = WM.VariableFieldsFrom3DOutputFileAtIndex(WM.NumberOf3DOutputFiles,'t');
+% tau = WM.VariableFieldsFrom3DOutputFileAtIndex(WM.NumberOf3DOutputFiles,'t');
+tau = max(WM.T_diss_x,WM.T_diss_z);
 R = exp((lambda_x+lambda_z)*tau);
 
-C = contourc(j_diss,k_diss,R,0.5*[1 1]);
+% The highest wavenumber should e-fold in time tau, so let's contour the
+% area that retains 90% of its value
+C = contourc(j_diss,k_diss,R,0.90*[1 1]);
 n = C(2,1);
 j_damp = C(1,1+1:n);
 k_damp = C(2,1+1:n);
@@ -251,4 +258,4 @@ p2.Position = [p2.Position(1) p2.Position(2) 0.20 p2.Position(4)];
 p3.OuterPosition = [0.66 p3.OuterPosition(2) 0.28 p3.OuterPosition(4)];
 p3.Position = [p3.Position(1) p3.Position(2) 0.20 p3.Position(4)];
 
-print('-dpng', '-r300', sprintf('EnergyAndEnergyFraction-%s.png',runtype))
+% print('-dpng', '-r300', sprintf('EnergyAndEnergyFraction-%s.png',runtype))

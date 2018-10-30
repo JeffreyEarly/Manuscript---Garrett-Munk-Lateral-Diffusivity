@@ -22,12 +22,13 @@ im = InternalModesExponentialStratification([5.2e-3 1025], zIn, z, 33,'nModes',m
 im.normalization = Normalization.kConstant;
 [F,G] = im.ModesAtWavenumber(1e-2);
 
-kappa_F = InternalModes.ConditionNumberAsFunctionOfModeNumber(F);
-kappa_G = InternalModes.ConditionNumberAsFunctionOfModeNumber(G);
+
 
 nGoodModes_F = InternalModes.NumberOfWellConditionedModes(F);
 nGoodModes_G = InternalModes.NumberOfWellConditionedModes(G);
 
 min([nGoodModes_F nGoodModes_G])
 
+kappa_F = InternalModes.ConditionNumberAsFunctionOfModeNumber(F);
+kappa_G = InternalModes.ConditionNumberAsFunctionOfModeNumber(G);
 figure, plot([kappa_F kappa_G]),ylog, hold on, vlines([nGoodModes_F nGoodModes_G],'g--')

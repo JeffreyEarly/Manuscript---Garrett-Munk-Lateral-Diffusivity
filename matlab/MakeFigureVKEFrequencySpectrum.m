@@ -1,8 +1,14 @@
 scaleFactor = 1;
 LoadFigureDefaults;
 
-mooringsfile = '../data/2018_10/EarlyV2_GM_NL_forced_damped_moorings.mat';
-% mooringsfile = '../data/2018_10/EarlyV2_GM_LIN_unforced_damped_moorings.mat';
+runtype = 'linear';
+if strcmp(runtype,'linear')
+    mooringsfile = '../data/2018_10/EarlyV2_GM_LIN_unforced_damped_moorings.mat';
+elseif strcmp(runtype,'nonlinear')
+    mooringsfile = '../data/2018_10/EarlyV2_GM_NL_forced_damped_moorings.mat'; 
+else
+    error('invalid run type.');
+end
 
 load(mooringsfile)
 
@@ -52,4 +58,4 @@ xlim([0 12])
 ylim([5e-4 1.3e-2])
 
 
-print('-depsc','VerticalVelocitySpectrum.eps')
+print('-depsc',sprintf('VerticalVelocitySpectrum-%s.eps',runtype))

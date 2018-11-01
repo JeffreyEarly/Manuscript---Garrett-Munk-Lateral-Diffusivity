@@ -11,19 +11,19 @@
 scaleFactor = 1;
 LoadFigureDefaults;
 
-runtype = 'linear';
+runtype = 'nonlinear';
 ReadOverNetwork = 0;
 
 if ReadOverNetwork == 1
     baseURL = '/Volumes/seattle_data1/cwortham/research/nsf_iwv/model_raw/';
 else
-    baseURL = '/Volumes/Samsung_T5/nsf_iwv/model_raw/';
+    baseURL = '/Volumes/Samsung_T5/nsf_iwv/2018_11/';
 end
 
 if strcmp(runtype,'linear')
-    file = strcat(baseURL,'EarlyV2_GM_LIN_unforced_damped');
+    file = strcat(baseURL,'EarlyV2_GM_LIN_unforced_damped_restart');
 elseif strcmp(runtype,'nonlinear')
-    file = strcat(baseURL,'EarlyV2_GM_NL_forced_damped'); 
+    file = strcat(baseURL,'EarlyV2_GM_NL_forced_damped_restart'); 
 else
     error('invalid run type.');
 end
@@ -37,6 +37,8 @@ wavemodel = WM.wavemodel;
 %
 
 maxFileIndex = WM.NumberOf3DOutputFiles;
+t0 = WM.VariableFieldsFrom3DOutputFileAtIndex(1,'t');
+t_max = WM.VariableFieldsFrom3DOutputFileAtIndex(maxFileIndex,'t');
 
 % These first two lines actually do the decomposition
 [t,u,v,w,rho_prime] = WM.VariableFieldsFrom3DOutputFileAtIndex(maxFileIndex,'t','u','v','w','rho_prime');
@@ -97,12 +99,9 @@ M = (2*pi/(length(wavemodel.j)*dz))*J/2;
 
 lambda_x = nu_x*(sqrt(-1)*K).^(2*WM.p_x);
 lambda_z = nu_z*(sqrt(-1)*M).^(2*WM.p_y);
-% tau = WM.VariableFieldsFrom3DOutputFileAtIndex(WM.NumberOf3DOutputFiles,'t');
-tau = max(WM.T_diss_x,WM.T_diss_z);
-R = exp((lambda_x+lambda_z)*tau);
+R = exp(2*(lambda_x+lambda_z)*(t_max-t0));
 
-% The highest wavenumber should e-fold in time tau, so let's contour the
-% area that retains 90% of its value
+% Let's contour the area that retains 90% of its value
 C = contourc(j_diss,k_diss,R,0.90*[1 1]);
 n = C(2,1);
 j_damp = C(1,1+1:n);
@@ -258,4 +257,4 @@ p2.Position = [p2.Position(1) p2.Position(2) 0.20 p2.Position(4)];
 p3.OuterPosition = [0.66 p3.OuterPosition(2) 0.28 p3.OuterPosition(4)];
 p3.Position = [p3.Position(1) p3.Position(2) 0.20 p3.Position(4)];
 
-% print('-dpng', '-r300', sprintf('EnergyAndEnergyFraction-%s.png',runtype))
+print('-dpng', '-r300', sprintf('EnergyAndEnergyFraction-%s.png',runtype))

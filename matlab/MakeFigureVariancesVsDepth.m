@@ -22,17 +22,24 @@ z = linspace(-L,0,100)';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Constants
+runtype = 'nonlinear';
 ReadOverNetwork = 0;
+
 if ReadOverNetwork == 1
     baseURL = '/Volumes/seattle_data1/cwortham/research/nsf_iwv/model_raw/';
 else
-    baseURL = '/Volumes/Samsung_T5/nsf_iwv/model_raw/';
+    baseURL = '/Volumes/Samsung_T5/nsf_iwv/2018_11/';
 end
-% Version 2 files, from October 2018
-NonlinearSteadyStateFile = strcat(baseURL,'EarlyV2_GM_NL_forced_damped');
-LinearSteadyStateFile = strcat(baseURL,'EarlyV2_GM_LIN_unforced_damped');
 
-WM = WintersModel(NonlinearSteadyStateFile);
+if strcmp(runtype,'linear')
+    file = strcat(baseURL,'EarlyV2_GM_LIN_unforced_damped_restart');
+elseif strcmp(runtype,'nonlinear')
+    file = strcat(baseURL,'EarlyV2_GM_NL_forced_damped_restart'); 
+else
+    error('invalid run type.');
+end
+
+WM = WintersModel(file);
 wavemodel = WM.wavemodel;
 [t,u,v,w,eta] = WM.VariableFieldsFrom3DOutputFileAtIndex(1,'t','u','v','w','zeta');
 Euv_model = squeeze(mean(mean(u.^2 + v.^2,1),2));

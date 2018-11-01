@@ -1,8 +1,8 @@
 scaleFactor = 1;
 LoadFigureDefaults;
 
-mooringsfile = '../data/2018_10/EarlyV2_GM_NL_forced_damped_moorings.mat';
-mooringsfile = '../data/2018_10/EarlyV2_GM_LIN_unforced_damped_moorings.mat';
+mooringsfile = '../data/2018_11/EarlyV2_GM_NL_forced_damped_restart_moorings.mat';
+% mooringsfile = '../data/2018_10/EarlyV2_GM_LIN_unforced_damped_restart_moorings.mat';
 
 load(mooringsfile)
 

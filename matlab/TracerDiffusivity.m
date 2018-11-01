@@ -1,24 +1,22 @@
+runtype = 'linear';
 ReadOverNetwork = 0;
-shouldUseNonlinear = 0;
 
 if ReadOverNetwork == 1
     baseURL = '/Volumes/seattle_data1/cwortham/research/nsf_iwv/model_raw/';
 else
-    baseURL = '/Volumes/Samsung_T5/nsf_iwv/model_raw/';
+    baseURL = '/Volumes/Samsung_T5/nsf_iwv/2018_11/';
 end
 
-% Version 2 files, from October 2018
-if shouldUseNonlinear == 1
-    NonlinearSteadyStateFile = strcat(baseURL,'EarlyV2_GM_NL_forced_damped');
-    WM = WintersModel(NonlinearSteadyStateFile);
-    appended_name = 'Nonlinear';
+if strcmp(runtype,'linear')
+    file = strcat(baseURL,'EarlyV2_GM_LIN_unforced_damped_restart');
+elseif strcmp(runtype,'nonlinear')
+    file = strcat(baseURL,'EarlyV2_GM_NL_forced_damped_restart'); 
 else
-    LinearSteadyStateFile = strcat(baseURL,'EarlyV2_GM_LIN_unforced_damped');
-    WM = WintersModel(LinearSteadyStateFile);
-    appended_name = 'Linear';
+    error('invalid run type.');
 end
 
-
+WM = WintersModel(file);
+wavemodel = WM.wavemodel;
 
 s2 = WM.VariableFieldsFrom3DOutputFileAtIndex(1,'s2');
 
@@ -78,7 +76,7 @@ kappa_xy = (p(1)/mu(2))/2;
 [p,~,mu]=polyfit(t,m_zz,1);
 kappa_z = (p(1)/mu(2))/2;
             
-figure
+figure('Name','LateralDiffusivityOfTracer')
 subplot(3,1,1)
 plot(t/86400,m/m(1))
 ylabel('total mass')
@@ -91,9 +89,9 @@ plot(t/86400,[m_xx, m_yy,D2]/1e6)
 legend('xx','yy','(xx+yy)/2')
 title(sprintf('isotropic diffusivity %.2f m^2/s at scale %.0f km',kappa_xy, sqrt(D2(1))/1e3 ));
 ylabel('km^2')
-print('-depsc',sprintf('TracerLateral_%s.eps',appended_name))
+print('-depsc',sprintf('TracerLateral-%s.eps',runtype))
 
-figure
+figure('Name','VerticalDiffusivityOfTracer')
 subplot(2,1,1)
 plot(t/86400,m_z)
 ylabel('m')
@@ -101,4 +99,4 @@ subplot(2,1,2)
 plot(t/86400,m_zz)
 title(sprintf('isotropic diffusivity %.2g m^2/s at scale %.2f m',kappa_z, sqrt(m_zz(1)) ));
 ylabel('m^2')
-print('-depsc',sprintf('TracerVertical_%s.eps',appended_name))
+print('-depsc',sprintf('TracerVertical-%s.eps',runtype))

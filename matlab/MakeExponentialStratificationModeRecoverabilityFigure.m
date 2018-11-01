@@ -9,7 +9,7 @@
 Lx = 800e3;
 Lz = 4000;
 
-Nz = 256;
+Nz = 512;
 Nx = 128;
 
 dk = 1/Lx;          % fourier frequency
@@ -18,9 +18,9 @@ k = 2*pi*([0:ceil(Nx/2)-1 -floor(Nx/2):-1]*dk)';
 zIn = [-Lz 0];
 z = linspace(-Lz,0,Nz)';
 
-im = InternalModesExponentialStratification([5.2e-3 1025], zIn, z, 33,'nModes',max(Nz/2,128));
+im = InternalModesExponentialStratification([5.2e-3 1025], zIn, z, 33,'nModes',floor(Nz/3.9));
 im.normalization = Normalization.kConstant;
-[F,G] = im.ModesAtWavenumber(1e-2);
+[F,G] = im.ModesAtWavenumber( 0.0565);
 
 
 

@@ -11,7 +11,7 @@ runtype = 'nonlinear';
 if strcmp(runtype,'linear')
 
 elseif strcmp(runtype,'nonlinear')
-    load('../data/2018_10/EarlyV2_GM_NL_forced_damped_decomp.mat');
+    load('../data/2018_11/EarlyV2_GM_NL_forced_damped_restart_decomp.mat');
 else
     error('invalid run type.');
 end
@@ -35,10 +35,10 @@ M = (2*pi/(length(j)*dz))*J/2;
 
 lambda_x = nu_x*(sqrt(-1)*K).^(2*p);
 lambda_z = nu_z*(sqrt(-1)*M).^(2*p);
-tau = max(t);
-R = exp((lambda_x+lambda_z)*tau);
+R = exp(2*(lambda_x+lambda_z)*(t(end)-t(1)));
 
-C = contourc(j_diss,k_diss,R,0.5*[1 1]);
+% Let's contour the area that retains 90% of its value
+C = contourc(j_diss,k_diss,R,0.90*[1 1]);
 n = C(2,1);
 j_damp = C(1,1+1:n);
 k_damp = C(2,1+1:n);

@@ -6,10 +6,12 @@
 % modes. There is no dependence on wavenumber k for the until you get
 % around 100 meters.
 
-Lx = 800e3;
-Lz = 4000;
+latitude = 31;
 
-Nz = 512;
+Lx = 800e3;
+Lz = 5000;
+
+Nz = 513;
 Nx = 128;
 
 dk = 1/Lx;          % fourier frequency
@@ -18,9 +20,19 @@ k = 2*pi*([0:ceil(Nx/2)-1 -floor(Nx/2):-1]*dk)';
 zIn = [-Lz 0];
 z = linspace(-Lz,0,Nz)';
 
-im = InternalModesExponentialStratification([5.2e-3 1025], zIn, z, 33,'nModes',floor(Nz/3.9));
+if 1==1
+    im = InternalModesExponentialStratification([5.2e-3 1025], zIn, z, latitude,'nModes',floor(Nz/2)); %floor(Nz/3.9)
+%     [F,G] = im.ModesAtWavenumber( 0.0565);
+else
+    N0 = 5.2e-3; % Choose your stratification 7.6001e-04
+    
+    rho0 = 1025; g = 9.81;
+    rho = @(z) -(N0*N0*rho0/g)*z + rho0;
+    im = InternalModes(rho,[-Lz 0],z,latitude);
+end
+% im = InternalModesConstantStratification(5.2e-3, zIn, z, 33);
 im.normalization = Normalization.kConstant;
-[F,G] = im.ModesAtWavenumber( 0.0565);
+[F,G] = im.ModesAtWavenumber( 0);
 
 
 

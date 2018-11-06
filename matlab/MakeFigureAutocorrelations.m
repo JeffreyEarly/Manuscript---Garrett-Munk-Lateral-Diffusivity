@@ -6,14 +6,24 @@
 scaleFactor = 1;
 LoadFigureDefaults;
 
-NonlinearSpindownFile = '/Volumes/seattle_data1/cwortham/research/nsf_iwv/model_raw/EarlyEtal_GM_NL_unforced_36000s';
-NonlinearForcedFromInitialConditionsFile = '/Volumes/seattle_data1/cwortham/research/nsf_iwv/model_raw/EarlyEtal_GM_NL_35e-11_36000s';
-LinearSteadyStateFile = '/Volumes/seattle_data1/cwortham/research/nsf_iwv/model_raw/EarlyEtal_GM_LIN_unforced_3600000s_restart';
-NonlinearSteadyStateFile = '/Volumes/Samsung_T5/nsf_iwv/model_raw/EarlyV2_GM_NL_forced_damped';
+runtype = 'nonlinear';
+ReadOverNetwork = 0;
 
-dynamicalfile = NonlinearSteadyStateFile;
-file = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_decomp.nc';
-matfile = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_decomp.mat';
+if ReadOverNetwork == 1
+    baseURL = '/Volumes/seattle_data1/cwortham/research/nsf_iwv/model_raw/';
+else
+    baseURL = '/Volumes/Samsung_T5/nsf_iwv/2018_11/';
+end
+
+if strcmp(runtype,'linear')
+    dynamicalfile = strcat(baseURL,'EarlyV2_GM_LIN_unforced_damped_restart');
+elseif strcmp(runtype,'nonlinear')
+    dynamicalfile = strcat(baseURL,'EarlyV2_GM_NL_forced_damped_restart'); 
+    file = strcat(baseURL,'EarlyV2_GM_NL_forced_damped_restart_decomp.nc'); 
+    matfile = strcat(baseURL,'EarlyV2_GM_NL_forced_damped_restart_decomp.mat'); 
+else
+    error('invalid run type.');
+end
 
 WM = WintersModel(dynamicalfile);
 wavemodel = WM.wavemodel;
@@ -56,16 +66,16 @@ iK = 8;
 titlestring = sprintf('Linear wave coefficients (k,j) = (%d km,%d)',round(2*pi/kAxis(iK)/1e3),iMode);
 
 % Partiatially nonlinear
-% iVars = 5:6;
-% iMode = 27;
-% iK = 20;
-% titlestring = sprintf('Linear vortex coefficients (k,j) = (%d km,%d)',round(2*pi/kAxis(iK)/1e3),iMode);
+iVars = 5:6;
+iMode = 27;
+iK = 20;
+titlestring = sprintf('Linear vortex coefficients (k,j) = (%d km,%d)',round(2*pi/kAxis(iK)/1e3),iMode);
 
 % Fully nonlinear
-% iVars = 1:4;
-% iMode = 228;
-% iK = 12;
-% titlestring = sprintf('Linear wave coefficients (k,j) = (%d km,%d)',round(2*pi/kAxis(iK)/1e3),iMode);
+iVars = 1:4;
+iMode = 228;
+iK = 12;
+titlestring = sprintf('Linear wave coefficients (k,j) = (%d km,%d)',round(2*pi/kAxis(iK)/1e3),iMode);
 
 ExampleSeries = zeros(length(t),5);
 

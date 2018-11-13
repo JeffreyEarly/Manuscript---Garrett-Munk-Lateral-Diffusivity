@@ -1,10 +1,11 @@
-runtype = 'nonlinear';
+runtype = 'linear';
 ReadOverNetwork = 0;
 
 if ReadOverNetwork == 1
     baseURL = '/Volumes/seattle_data1/cwortham/research/nsf_iwv/model_raw/';
 else
     baseURL = '/Volumes/Samsung_T5/nsf_iwv/2018_11/';
+    baseURL = '/Users/jearly/Documents/ManuscriptRepositories/garrett-munk-lateral-diffusivity/data/2018_11/';
 end
 
 if strcmp(runtype,'linear')
@@ -83,27 +84,36 @@ else
 end
 
 D2 = (m_xx+m_yy)/2;
-[p,~,mu]=polyfit(t,D2,1);
+
+% [xbar,f]  = FourierTransformForward(t,(m_xx+m_yy)/2,1);
+% figure, plot(f,abs(xbar).^2),ylog
+% S = abs(xbar).^2;
+% xbar(S>1e12) = 0;
+% 
+% x_back = FourierTransformBack(f,xbar,1);
+% figure, plot(t,x_back)
+% hold on, plot(t, D2 -mean(D2))
+% indices= 200:1100;
+
+N_osc = 13;
+filter_size = ceil(length(t)/N_osc);
+D2_filtered = RunningFilter(D2,filter_size,'mean');
+validIndices = ceil(filter_size/2):(length(t)-ceil(filter_size/2));
+
+X = t(validIndices);
+Y = D2_filtered(validIndices);
+
+% X = t;
+% Y = D2;
+
+[p,~,mu]=polyfit(X,Y,1);
 kappa_xy = (p(1)/mu(2))/2;
 
 [p,~,mu]=polyfit(t,m_zz,1);
 kappa_z = (p(1)/mu(2))/2;
 
-[xbar,f]  = FourierTransformForward(t,(m_xx+m_yy)/2,1);
-figure, plot(f,abs(xbar).^2),ylog
-S = abs(xbar).^2;
-xbar(S>1e12) = 0;
-
-x_back = FourierTransformBack(f,xbar,1);
-figure, plot(t,x_back)
-hold on, plot(t, D2 -mean(D2))
-indices= 200:1100;
-
-X = t;
-Y = D2;
-
-X = t(indices);
-Y = x_back(indices);
+% X = t(indices);
+% Y = x_back(indices);
 
 %% Calculation of Standard Error With Intercept
 n = length(X);                                      %  Number of observations
@@ -119,10 +129,10 @@ SSE = sum(r.^2);                                    %  SSE is the sum of squared
 MSE=SSE/(n-2);                                      %  Mean Squared Error
 Code_Intercept_SE=[                                 %  Standard Error of the regression coefficients
     sqrt(MSE*sum(X.^2)/(n*Sxx));                    %  Standard Error of the intercept coefficient
-    sqrt(MSE/Sxx)]                                  %  Standard Error of the slope coefficient
+    sqrt(MSE/Sxx)];                                  %  Standard Error of the slope coefficient
 
 
-return
+
 figure('Name','LateralDiffusivityOfTracer')
 subplot(3,1,1)
 plot(t/86400,m/m(1))
@@ -132,9 +142,11 @@ plot(t/86400,[m_x, m_y]/1e3)
 legend('x','y')
 ylabel('km')
 subplot(3,1,3)
-plot(t/86400,[m_xx, m_yy,D2]/1e6)
-legend('xx','yy','(xx+yy)/2')
-title(sprintf('isotropic diffusivity %.2f m^2/s at scale %.0f km',kappa_xy, sqrt(D2(1))/1e3 ));
+plot(t/86400,D2/1e6), hold on
+plot(t/86400,D2_filtered/1e6,'LineWidth',2)
+plot(X/86400,(Slope*X+Intercept)/1e6,'k--')
+legend('D2','D2 filtered','linear fit')
+title(sprintf('isotropic diffusivity %.2f +/- %.2f m^2/s at scale %.0f km',Slope/2,sqrt(MSE/Sxx), sqrt(D2(1))/1e3 ));
 ylabel('km^2')
 print('-depsc',sprintf('TracerLateral-%s.eps',runtype))
 
@@ -146,4 +158,4 @@ subplot(2,1,2)
 plot(t/86400,m_zz)
 title(sprintf('isotropic diffusivity %.2g m^2/s at scale %.2f m',kappa_z, sqrt(m_zz(1)) ));
 ylabel('m^2')
-print('-depsc',sprintf('TracerVertical-%s.eps',runtype))
+% print('-depsc',sprintf('TracerVertical-%s.eps',runtype))

@@ -1,4 +1,4 @@
-runtype = 'linear';
+runtype = 'nonlinear';
 ReadOverNetwork = 0;
 
 if ReadOverNetwork == 1
@@ -97,43 +97,35 @@ D2 = (m_xx+m_yy)/2;
 
 N_osc = 13;
 filter_size = ceil(length(t)/N_osc);
+filter_size = 1;
 D2_filtered = RunningFilter(D2,filter_size,'mean');
+Mzz_filtered = RunningFilter(m_zz,filter_size,'mean');
 validIndices = ceil(filter_size/2):(length(t)-ceil(filter_size/2));
 
 X = t(validIndices);
 Y = D2_filtered(validIndices);
+Z = Mzz_filtered(validIndices);
 
 % X = t;
 % Y = D2;
 
+
+[D2_coeff,D2_err] = LinearLeastSquaresFit(X,Y);
+[Mzz_coeff,Mzz_err] = LinearLeastSquaresFit(X,Z);
+
 [p,~,mu]=polyfit(X,Y,1);
 kappa_xy = (p(1)/mu(2))/2;
 
-[p,~,mu]=polyfit(t,m_zz,1);
+[p,~,mu]=polyfit(X,Z,1);
 kappa_z = (p(1)/mu(2))/2;
 
 % X = t(indices);
 % Y = x_back(indices);
 
-%% Calculation of Standard Error With Intercept
-n = length(X);                                      %  Number of observations
-XBar=mean(X);                                       %  Calculates mean of X
-YBar=mean(Y);                                       %  Calculates mean of Y
-Sxx=sum((X-XBar).^2);
-Sxy=sum((X-XBar).*(Y-YBar));
-Slope = Sxy/Sxx;                                    %  Calculates Slope
-Intercept= YBar-Slope*XBar;                         %  Calculates Intercept
-yfit=Intercept + X*Slope;                           %  Fitted response values based on the slope
-r = Y - yfit;                                       %  r is the residuals, which is the observed minus fitted values
-SSE = sum(r.^2);                                    %  SSE is the sum of squared errors
-MSE=SSE/(n-2);                                      %  Mean Squared Error
-Code_Intercept_SE=[                                 %  Standard Error of the regression coefficients
-    sqrt(MSE*sum(X.^2)/(n*Sxx));                    %  Standard Error of the intercept coefficient
-    sqrt(MSE/Sxx)];                                  %  Standard Error of the slope coefficient
 
 
 
-figure('Name','LateralDiffusivityOfTracer')
+figure('Name',sprintf('LateralDiffusivityOfTracer-%s',runtype))
 subplot(3,1,1)
 plot(t/86400,m/m(1))
 ylabel('total mass')
@@ -144,18 +136,19 @@ ylabel('km')
 subplot(3,1,3)
 plot(t/86400,D2/1e6), hold on
 plot(t/86400,D2_filtered/1e6,'LineWidth',2)
-plot(X/86400,(Slope*X+Intercept)/1e6,'k--')
+plot(X/86400,(D2_coeff(2)*X+D2_coeff(1))/1e6,'k--')
 legend('D2','D2 filtered','linear fit')
-title(sprintf('isotropic diffusivity %.2f +/- %.2f m^2/s at scale %.0f km',Slope/2,sqrt(MSE/Sxx), sqrt(D2(1))/1e3 ));
+title(sprintf('isotropic diffusivity %.2f +/- %.2f m^2/s at scale %.0f km',D2_coeff(2)/2,D2_err(2), sqrt(D2(1))/1e3 ));
 ylabel('km^2')
 print('-depsc',sprintf('TracerLateral-%s.eps',runtype))
 
-figure('Name','VerticalDiffusivityOfTracer')
+figure('Name',sprintf('VerticalDiffusivityOfTracer-%s',runtype))
 subplot(2,1,1)
 plot(t/86400,m_z)
 ylabel('m')
 subplot(2,1,2)
-plot(t/86400,m_zz)
-title(sprintf('isotropic diffusivity %.2g m^2/s at scale %.2f m',kappa_z, sqrt(m_zz(1)) ));
+plot(t/86400,m_zz), hold on
+plot(X/86400,Z,'LineWidth',2)
+title(sprintf('isotropic diffusivity %.2g +/- %.2g m^2/s at scale %.2f m',Mzz_coeff(2)/2,Mzz_err(2), sqrt(m_zz(1)) ));
 ylabel('m^2')
-% print('-depsc',sprintf('TracerVertical-%s.eps',runtype))
+print('-depsc',sprintf('TracerVertical-%s.eps',runtype))

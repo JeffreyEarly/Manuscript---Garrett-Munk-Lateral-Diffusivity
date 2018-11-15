@@ -156,7 +156,7 @@ fig1.PaperPosition = FigureSize;
 fig1.PaperSize = [FigureSize(3) FigureSize(4)];
 
 p1 = subplot(1,3,1);
-pcolor( k, j, log10(waveHKE.') ), xlog, ylog, shading flat, hold on
+jpcolor( k, j, log10(waveHKE.') ); xlog, ylog, shading flat, hold on
 plot( k_damp, j_damp, 'LineWidth', 4, 'Color', 0*[1 1 1])
 plot( k_damp, j_damp, 'LineWidth', 2, 'Color', [1 1 1])
 scatter( k(ExampleWaveK), ExampleWaveJ, 25, 0*[1 1 1], 'filled' );
@@ -183,7 +183,7 @@ cb1.TickLabels = {'10^{-10}', '10^{-8}', '10^{-6}', '10^{-4}', '10^{-2}', '10^{0
 % ylabel(cb, 'depth integrated energy (m^3/s^2)', 'FontSize', figure_axis_label_size, 'FontName', figure_font)
 
 p2 = subplot(1,3,2);
-pcolor( k, j, log10(vortexHKE.') ), xlog, ylog, shading flat, hold on
+jpcolor( k, j, log10(vortexHKE.') ); xlog, ylog, shading flat, hold on
 plot( k_damp, j_damp, 'LineWidth', 4, 'Color', 0*[1 1 1])
 plot( k_damp, j_damp, 'LineWidth', 2, 'Color', [1 1 1])
 scatter( k(ExampleVortexK), ExampleVortexJ, 25, 0*[1 1 1], 'filled' );
@@ -198,6 +198,9 @@ xlabel('wavelength (km)', 'FontSize', figure_axis_label_size, 'FontName', figure
 
 hold on, plot(kr,j, 'LineWidth', 2.0*scaleFactor, 'Color', 1.0*[1 1 1])
 
+% [~,~,~,kk] = im.ModesAtFrequency(1.5*2*pi/86400);
+% plot( kk,1:length(kk), '--', 'LineWidth', 2.0*scaleFactor, 'Color', 1.0*[1 1 1])
+
 p2.TickDir = 'out';
 
 colormap( cmocean('dense') );
@@ -206,8 +209,6 @@ cb2 = colorbar('eastoutside');
 cb2.Ticks = [-10 -9 -8 -7 -6 -5];
 cb2.TickLabels = {'10^{-10}', '10^{-9}', '10^{-8}', '10^{-7}', '10^{-6}', '10^{-5}'};
 % ylabel(cb2, 'm^3/s^2', 'FontSize', figure_axis_label_size, 'FontName', figure_font)
-
-% print('-dpng', '-r300', sprintf('Energy-%s.png',runtype))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -224,9 +225,12 @@ HKE_fraction = waveHKE./(waveHKE+vortexHKE);
 % fig1.PaperSize = [FigureSize(3) FigureSize(4)];
 
 p3 = subplot(1,3,3);
-pcolor( k, j, abs(log10(1-HKE_fraction.') )), xlog, ylog, shading flat, hold on
+jpcolor( k, j, abs(log10(1-HKE_fraction.') )); xlog, ylog, shading flat, hold on
 plot( k_damp, j_damp, 'LineWidth', 4, 'Color', 0*[1 1 1])
 plot( k_damp, j_damp, 'LineWidth', 2, 'Color', [1 1 1])
+
+[~,~,~,kk] = im.ModesAtFrequency(4*2*pi/86400);
+plot( kk,1:length(kk), '--', 'LineWidth', 2.0*scaleFactor, 'Color', 1.0*[1 1 1])
 
 set( gca, 'FontSize', figure_axis_tick_size);
 
@@ -257,4 +261,4 @@ p2.Position = [p2.Position(1) p2.Position(2) 0.20 p2.Position(4)];
 p3.OuterPosition = [0.66 p3.OuterPosition(2) 0.28 p3.OuterPosition(4)];
 p3.Position = [p3.Position(1) p3.Position(2) 0.20 p3.Position(4)];
 
-print('-dpng', '-r300', sprintf('EnergyAndEnergyFraction-%s.png',runtype))
+% print('-dpng', '-r300', sprintf('EnergyAndEnergyFraction-%s.png',runtype))

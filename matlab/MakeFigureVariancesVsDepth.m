@@ -39,9 +39,12 @@ else
     error('invalid run type.');
 end
 
+ExponentialSpinup = strcat(baseURL,'EarlyV2_GMexp_NL_forced_damped_64cube');
+file = ExponentialSpinup;
+
 WM = WintersModel(file);
 wavemodel = WM.wavemodel;
-[t,u,v,w,eta] = WM.VariableFieldsFrom3DOutputFileAtIndex(1,'t','u','v','w','zeta');
+[t,u,v,w,eta] = WM.VariableFieldsFrom3DOutputFileAtIndex(WM.NumberOf3DOutputFiles,'t','u','v','w','zeta');
 Euv_model = squeeze(mean(mean(u.^2 + v.^2,1),2));
 Eeta_model = squeeze(mean(mean(eta.^2,1),2));
 Ew_model = squeeze(mean(mean(w.^2,1),2));
@@ -110,7 +113,7 @@ packfig(1,3);
 tightfig;
 leg.Position = leg.Position + [0.035 0.035 0 0];
 
-print('-depsc','VariancesVsDepth.eps')
+% print('-depsc','VariancesVsDepth.eps')
 
 % plot(1e4*(Euv + Ew + N2.*Eeta)/2,z), hold on
 % plot(1e4*(Euv_const + Ew_const + N0_const*N0_const.*Eeta_const)/2,z)
@@ -168,7 +171,7 @@ packfig(1,3);
 tightfig;
 
 
-print('-depsc','VariancesVsDepthWKB.eps')
+% print('-depsc','VariancesVsDepthWKB.eps')
 
 E = 0.5*(Euv + Ew + N2.*Eeta);
 Etotal = trapz(z,E);

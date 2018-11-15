@@ -4,13 +4,15 @@ LoadFigureDefaults;
 mooringsfile = '../data/2018_11/EarlyV2_GM_NL_forced_damped_restart_moorings.mat';
 % mooringsfile = '../data/2018_10/EarlyV2_GM_LIN_unforced_damped_restart_moorings.mat';
 
+mooringsfile = '/Volumes/Samsung_T5/nsf_iwv/2018_11/EarlyV2_GMexp_NL_forced_damped_64cube_moorings.mat';
+
 load(mooringsfile)
 
 nT = length(t);
 nDepths = length(depths);
 
 dt = t(2)-t(1);
-S = zeros(nT,nDepths);
+S = zeros(nT+1,nDepths);
 for iDepth = nDepths:-1:1
     cv_mooring = squeeze(u3d(:,iDepth,:) + sqrt(-1)*v3d(:,iDepth,:)).';
     [omega_p, Spp, Snn, Spn] = mspec(dt,cv_mooring,[]);
@@ -26,7 +28,7 @@ fig1.PaperPosition = FigureSize;
 fig1.PaperSize = [FigureSize(3) FigureSize(4)];
 
 
-GM = GarrettMunkSpectrumConstantStratification(N0/2,[-Lz 0],latitude);
+% GM = GarrettMunkSpectrumConstantStratification(N0/2,[-Lz 0],latitude);
 S_theory = GM.HorizontalVelocitySpectrumAtFrequencies(flip(depths),omega)';
 S_theory( S_theory<1e-4 ) = nan;
 semilogy(omega*86400/(2*pi),S_theory,'--','LineWidth', 2)

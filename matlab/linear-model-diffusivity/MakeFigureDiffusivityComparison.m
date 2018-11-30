@@ -1,5 +1,5 @@
 diffusivityMetric = 'relative';
-diffusivityMethod = 'powspec';
+diffusivityMethod = 'slope';
 
 
 maxDiffusivity = 1.0;
@@ -22,6 +22,8 @@ file = '/Volumes/Samsung_T5/DiffusivityExperiment_2018-11-27T065209_128x64x65.nc
 file = '/Volumes/Samsung_T5/DiffusivityExperiment_2018-11-27T085340_512x128x65.nc';
 % nTidalWavelengths = 4
 file = '/Volumes/Samsung_T5/DiffusivityExperiment_2018-11-27T215253_512x128x65.nc';
+% nTidalWavelengths = 1
+% file = '/Volumes/Samsung_T5/DiffusivityExperiment_2018-11-28T185802_512x128x65.nc';
 
 
 t = ncread(file, 't');
@@ -33,14 +35,27 @@ floatsPerLevel = size(x,2)/nLevels;
 
 tIndices = 1:30:length(t);
 tIndexMax = find(t>9*86400,1,'first');
-% tIndexMax = length(t);
+tIndexMax = length(t);
 tIndices = 1:1:tIndexMax;
 
 % tIndices = 1:length(t);
 
 % nLevels = size(x,2)/floatsPerLevel;
 
-dx = abs(x(1,2)-x(1,1));
+% xDist = abs(x(1,1)-x(1,:));
+% xDist = xDist(xDist>0);
+% minDx = min(xDist);
+% maxDx = max(xDist);
+% 
+% yDist = abs(y(1,1)-y(1,:));
+% yDist = yDist(yDist>0);
+% minDy = min(yDist);
+% maxDy = max(yDist);
+% 
+% dBin = 2*max(minDx,minDy);
+% maxBin = sqrt( (maxDx-minDx)^2 + (maxDy-minDy)^2 );
+% theBins = linspace(0,maxBin,ceil(maxBin/dBin))';
+
 theBins = dx*(1:sqrt(floatsPerLevel)) + dx/2;
 theBins(1) = 0;
 nBins = length(theBins);

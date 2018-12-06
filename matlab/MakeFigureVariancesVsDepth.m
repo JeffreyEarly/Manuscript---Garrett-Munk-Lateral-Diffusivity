@@ -17,13 +17,13 @@ E0 = (1.3e3)*(1.3e3)*(1.3e3)*(5.2e-3)*(5.2e-3)*(6.3e-5);
 Bw2 = f0*f0*(2*sqrt(N0*N0-f0*f0)/(pi*f0) - 1);
 w2_gm = Bw2*E0/(L_gm*N0*N0);
 
-z = linspace(-L,0,100)';
+z_exp = linspace(-L,0,100)';
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Constants
 runtype = 'nonlinear';
-ReadOverNetwork = 0;
+ReadOverNetwork = 1;
 
 if ReadOverNetwork == 1
     baseURL = '/Volumes/seattle_data1/cwortham/research/nsf_iwv/model_raw/';
@@ -39,15 +39,19 @@ else
     error('invalid run type.');
 end
 
-ExponentialSpinup = strcat(baseURL,'EarlyV2_GMexp_NL_forced_damped_64cube');
-file = ExponentialSpinup;
+% ExponentialSpinup = strcat(baseURL,'EarlyV2_GMexp_NL_forced_damped_64cube');
+% file = ExponentialSpinup;
 
 WM = WintersModel(file);
 wavemodel = WM.wavemodel;
+z_model = wavemodel.z;
+L_model = max(wavemodel.z)-min(wavemodel.z);
+
 [t,u,v,w,eta] = WM.VariableFieldsFrom3DOutputFileAtIndex(WM.NumberOf3DOutputFiles,'t','u','v','w','zeta');
 Euv_model = squeeze(mean(mean(u.^2 + v.^2,1),2));
 Eeta_model = squeeze(mean(mean(eta.^2,1),2));
 Ew_model = squeeze(mean(mean(w.^2,1),2));
+
 
 if ~exist('GM','var')
     GM = GarrettMunkSpectrum(rho,[-L 0],latitude);
@@ -58,12 +62,12 @@ Ew = GM.VerticalVelocityVariance(z);
 N2 = GM.N2(z);
 N = sqrt(N2);
 
-N0_const = N0/2;
-GMConst = GarrettMunkSpectrumConstantStratification(N0_const,[-L 0],latitude);
-EnergyScale = L/L_gm/2;
-Euv_const = EnergyScale*GMConst.HorizontalVelocityVariance(z);
-Eeta_const = EnergyScale*GMConst.IsopycnalVariance(z);
-Ew_const = EnergyScale*GMConst.VerticalVelocityVariance(z);
+N0_const = N0;
+GMConst = GarrettMunkSpectrumConstantStratification(N0_const,[-L_model 0],latitude);
+EnergyScale = 1.0;
+Euv_const = EnergyScale*GMConst.HorizontalVelocityVariance(z_model);
+Eeta_const = EnergyScale*GMConst.IsopycnalVariance(z_model);
+Ew_const = EnergyScale*GMConst.VerticalVelocityVariance(z_model);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -77,7 +81,7 @@ fig1.PaperSize = [FigureSize(3) FigureSize(4)];
 
 subplot(1,3,1)
 plot(1e4*Euv,z), hold on
-plot(1e4*Euv_const,z)
+plot(1e4*Euv_const,z_model)
 plot(1e4*Euv_model,wavemodel.z)
 set( gca, 'FontSize', figure_axis_tick_size);
 ylabel('depth (m)', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
@@ -86,7 +90,7 @@ title('E\langle{u^2+v^2}\rangle', 'FontSize', figure_axis_label_size, 'FontName'
 
 subplot(1,3,2)
 plot(Eeta,z), hold on
-plot(Eeta_const,z)
+plot(Eeta_const,z_model)
 plot(Eeta_model,wavemodel.z)
 set( gca, 'FontSize', figure_axis_tick_size);
 xlabel('m^2', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
@@ -102,7 +106,7 @@ end
 
 subplot(1,3,3)
 plot(1e4*Ew,z), hold on
-plot(1e4*Ew_const,z)
+plot(1e4*Ew_const,z_model)
 plot(1e4*Ew_model,wavemodel.z)
 set( gca, 'FontSize', figure_axis_tick_size);
 xlabel('cm^2/s^2', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
@@ -136,8 +140,8 @@ fig1.PaperSize = [FigureSize(3) FigureSize(4)];
 
 subplot(1,3,1)
 plot(1e4*Euv.*(N0./N),z), hold on
-plot(1e4*Euv_const.*(N0./N0_const),z)
-plot(1e4*Euv_model.*(N0./N0_const),wavemodel.z)
+plot(1e4*Euv_const.*(N0./N0_const),z_model)
+plot(1e4*Euv_model.*(N0./wavemodel.N0),wavemodel.z)
 vlines(44,'k--')
 set( gca, 'FontSize', figure_axis_tick_size);
 xlabel('cm^2/s^2', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
@@ -148,8 +152,8 @@ xlim([0 1.1*max(1e4*Euv.*(N0./N))])
 
 subplot(1,3,2)
 plot(Eeta.*(N/N0),z),hold on
-plot(Eeta_const*(N0_const/N0),z)
-plot(Eeta_model*(N0_const/N0),wavemodel.z)
+plot(Eeta_const*(N0_const/N0),z_model)
+plot(Eeta_model*(wavemodel.N0/N0),wavemodel.z)
 vlines(53,'k--')
 set( gca, 'FontSize', figure_axis_tick_size);
 xlabel('m^2', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
@@ -159,8 +163,8 @@ xlim([0 1.1*max(Eeta.*(N/N0))])
 
 subplot(1,3,3)
 plot(1e4*Ew.*(N/N0),z),hold on
-plot(1e4*Ew_const*(N0_const/N0),z)
-plot(1e4*Ew_model*(N0_const/N0),wavemodel.z)
+plot(1e4*Ew_const*(N0_const/N0),z_model)
+plot(1e4*Ew_model*(wavemodel.N0/N0),wavemodel.z)
 vlines(1e4*w2_gm,'k--')
 set( gca, 'FontSize', figure_axis_tick_size);
 xlabel('cm^2/s^2', 'FontSize', figure_axis_label_size, 'FontName', figure_font);

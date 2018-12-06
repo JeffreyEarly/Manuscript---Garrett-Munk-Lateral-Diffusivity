@@ -1,4 +1,4 @@
-load('../data/2018_11/particles_LIN.mat');
+load('../data/2018_12/particles_NL.mat');
 
 tIndices = 1:30:length(t);
 

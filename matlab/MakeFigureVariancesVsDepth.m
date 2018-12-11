@@ -23,12 +23,12 @@ z_exp = linspace(-L,0,100)';
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Constants
 runtype = 'nonlinear';
-ReadOverNetwork = 1;
+ReadOverNetwork = 0;
 
 if ReadOverNetwork == 1
     baseURL = '/Volumes/seattle_data1/cwortham/research/nsf_iwv/model_raw/';
 else
-    baseURL = '/Volumes/Samsung_T5/nsf_iwv/2018_11/';
+    baseURL = '/Volumes/Samsung_T5/nsf_iwv/2018_12/';
 end
 
 if strcmp(runtype,'linear')
@@ -56,10 +56,11 @@ Ew_model = squeeze(mean(mean(w.^2,1),2));
 if ~exist('GM','var')
     GM = GarrettMunkSpectrum(rho,[-L 0],latitude);
 end
-Euv = GM.HorizontalVelocityVariance(z);
-Eeta = GM.IsopycnalVariance(z);
-Ew = GM.VerticalVelocityVariance(z);
-N2 = GM.N2(z);
+
+Euv = GM.HorizontalVelocityVariance(z_exp);
+Eeta = GM.IsopycnalVariance(z_exp);
+Ew = GM.VerticalVelocityVariance(z_exp);
+N2 = GM.N2(z_exp);
 N = sqrt(N2);
 
 N0_const = N0;
@@ -80,7 +81,7 @@ fig1.PaperPosition = FigureSize;
 fig1.PaperSize = [FigureSize(3) FigureSize(4)];
 
 subplot(1,3,1)
-plot(1e4*Euv,z), hold on
+plot(1e4*Euv,z_exp), hold on
 plot(1e4*Euv_const,z_model)
 plot(1e4*Euv_model,wavemodel.z)
 set( gca, 'FontSize', figure_axis_tick_size);
@@ -89,7 +90,7 @@ xlabel('cm^2/s^2', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
 title('E\langle{u^2+v^2}\rangle', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
 
 subplot(1,3,2)
-plot(Eeta,z), hold on
+plot(Eeta,z_exp), hold on
 plot(Eeta_const,z_model)
 plot(Eeta_model,wavemodel.z)
 set( gca, 'FontSize', figure_axis_tick_size);
@@ -105,7 +106,7 @@ for i=4:2:8
 end
 
 subplot(1,3,3)
-plot(1e4*Ew,z), hold on
+plot(1e4*Ew,z_exp), hold on
 plot(1e4*Ew_const,z_model)
 plot(1e4*Ew_model,wavemodel.z)
 set( gca, 'FontSize', figure_axis_tick_size);
@@ -139,7 +140,7 @@ fig1.PaperPosition = FigureSize;
 fig1.PaperSize = [FigureSize(3) FigureSize(4)];
 
 subplot(1,3,1)
-plot(1e4*Euv.*(N0./N),z), hold on
+plot(1e4*Euv.*(N0./N),z_exp), hold on
 plot(1e4*Euv_const.*(N0./N0_const),z_model)
 plot(1e4*Euv_model.*(N0./wavemodel.N0),wavemodel.z)
 vlines(44,'k--')
@@ -151,7 +152,7 @@ xlim([0 1.1*max(1e4*Euv.*(N0./N))])
 % title('wkb scaled')
 
 subplot(1,3,2)
-plot(Eeta.*(N/N0),z),hold on
+plot(Eeta.*(N/N0),z_exp),hold on
 plot(Eeta_const*(N0_const/N0),z_model)
 plot(Eeta_model*(wavemodel.N0/N0),wavemodel.z)
 vlines(53,'k--')
@@ -162,7 +163,7 @@ set(gca, 'YTick', []);
 xlim([0 1.1*max(Eeta.*(N/N0))])
 
 subplot(1,3,3)
-plot(1e4*Ew.*(N/N0),z),hold on
+plot(1e4*Ew.*(N/N0),z_exp),hold on
 plot(1e4*Ew_const*(N0_const/N0),z_model)
 plot(1e4*Ew_model*(wavemodel.N0/N0),wavemodel.z)
 vlines(1e4*w2_gm,'k--')

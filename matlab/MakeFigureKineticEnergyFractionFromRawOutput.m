@@ -17,7 +17,7 @@ ReadOverNetwork = 0;
 if ReadOverNetwork == 1
     baseURL = '/Volumes/seattle_data1/cwortham/research/nsf_iwv/model_raw/';
 else
-    baseURL = '/Volumes/Samsung_T5/nsf_iwv/2018_11/';
+    baseURL = '/Volumes/Samsung_T5/nsf_iwv/2018_12/';
 end
 
 if strcmp(runtype,'linear')
@@ -261,4 +261,4 @@ p2.Position = [p2.Position(1) p2.Position(2) 0.20 p2.Position(4)];
 p3.OuterPosition = [0.66 p3.OuterPosition(2) 0.28 p3.OuterPosition(4)];
 p3.Position = [p3.Position(1) p3.Position(2) 0.20 p3.Position(4)];
 
-% print('-dpng', '-r300', sprintf('EnergyAndEnergyFraction-%s.png',runtype))
+print('-dpng', '-r300', sprintf('EnergyAndEnergyFraction-%s.png',runtype))

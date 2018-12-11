@@ -78,8 +78,8 @@ jpcolor( k, j, (waveHKEFromVariance./waveHKE)'); xlog, ylog, shading flat, hold 
 plot( k_damp, j_damp, 'LineWidth', 2, 'Color', [1 1 1])
 
 
-[~,~,~,kk] = im.ModesAtFrequency(4*2*pi/86400);
-plot( kk,1:length(kk), '--', 'LineWidth', 2.0*scaleFactor, 'Color', 1.0*[1 1 1])
+% [~,~,~,kk] = im.ModesAtFrequency(4*2*pi/86400);
+% plot( kk,1:length(kk), '--', 'LineWidth', 2.0*scaleFactor, 'Color', 1.0*[1 1 1])
 
 title('Wave Nonlinearity', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
 

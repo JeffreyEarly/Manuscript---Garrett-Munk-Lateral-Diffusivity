@@ -4,7 +4,7 @@ diffusivityMethod = 'powspec';
 
 maxDiffusivity = 1.0;
 
-load('../data/2018_11/particles_LIN.mat');
+load('../data/2018_12/particles_LIN.mat');
 
 tIndices = 1:30:length(t);
 
@@ -50,7 +50,7 @@ title(sprintf('horizontal *relative* diffusivity at different depths (%s method)
 ylim([0 0.55])
 text(250,0.9,'Linear')
 
-load('../data/2018_11/particles_NL.mat');
+load('../data/2018_12/particles_NL.mat');
 
 tIndices = 1:30:length(t);
 

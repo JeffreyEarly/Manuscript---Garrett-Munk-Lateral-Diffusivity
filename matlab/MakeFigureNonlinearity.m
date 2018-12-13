@@ -7,15 +7,34 @@ scaleFactor = 1;
 LoadFigureDefaults;
 
 runtype = 'nonlinear';
+ReadOverNetwork = 0;
+
+if ReadOverNetwork == 1
+    baseURL = '/Volumes/seattle_data1/cwortham/research/nsf_iwv/model_raw/';
+else
+    baseURL = '/Volumes/Samsung_T5/nsf_iwv/2018_12/';
+end
 
 if strcmp(runtype,'linear')
 
 elseif strcmp(runtype,'nonlinear')
-    load('../data/2018_11/EarlyV2_GM_NL_forced_damped_restart_decomp.mat');
+    load('../data/2018_12/EarlyV2_GM_NL_forced_damped_restart_decomp.mat');
+    file = strcat(baseURL,'EarlyV2_GM_NL_forced_damped_restart'); 
 else
     error('invalid run type.');
 end
 
+% we need this to compute the line of constant frequency
+WM = WintersModel(file);
+wavemodel = WM.wavemodel;
+
+
+% These are the values iMode, iK used in the MakeFiguresAutocorrelations
+ExampleWaveJ = [8 5];
+ExampleWaveK = [8 55];
+
+ExampleVortexJ = 8;
+ExampleVortexK = 55;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -77,9 +96,11 @@ fig1.PaperSize = [FigureSize(3) FigureSize(4)];
 jpcolor( k, j, (waveHKEFromVariance./waveHKE)'); xlog, ylog, shading flat, hold on
 plot( k_damp, j_damp, 'LineWidth', 2, 'Color', [1 1 1])
 
+scatter( k(ExampleWaveK), ExampleWaveJ, 25, 0*[1 1 1], 'filled' );
+scatter( k(ExampleWaveK), ExampleWaveJ, 8, 1*[1 1 1], 'filled' );
 
-% [~,~,~,kk] = im.ModesAtFrequency(4*2*pi/86400);
-% plot( kk,1:length(kk), '--', 'LineWidth', 2.0*scaleFactor, 'Color', 1.0*[1 1 1])
+[~,~,~,kk] = wavemodel.internalModes.ModesAtFrequency(2*2*pi/86400);
+plot( kk,1:length(kk), '--', 'LineWidth', 2.0*scaleFactor, 'Color', 1.0*[1 1 1])
 
 title('Wave Nonlinearity', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
 
@@ -95,7 +116,7 @@ colormap( cmocean('dense') );
 cb = colorbar('eastoutside');
 caxis([0 1])
 
-print('-dpng', '-r300', sprintf('WaveNonlinearity.png'))
+print('-dpng', '-r300', sprintf('../figures/WaveNonlinearity.png'))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -112,6 +133,9 @@ fig1.PaperSize = [FigureSize(3) FigureSize(4)];
 jpcolor( k, j, (vortexHKEFromVariance./vortexHKE)'); xlog, ylog, shading flat, hold on
 plot( k_damp, j_damp, 'LineWidth', 2, 'Color', [1 1 1])
 
+scatter( k(ExampleVortexK), ExampleVortexJ, 25, 0*[1 1 1], 'filled' );
+scatter( k(ExampleVortexK), ExampleVortexJ, 8, 1*[1 1 1], 'filled' );
+
 title('Vortex Nonlinearity', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
 
 xticks(ticks_x)
@@ -126,4 +150,4 @@ colormap( cmocean('dense') );
 cb = colorbar('eastoutside');
 caxis([0 1])
 
-print('-dpng', '-r300', sprintf('VortexNonlinearity.png'))
+print('-dpng', '-r300', sprintf('../figures/VortexNonlinearity.png'))

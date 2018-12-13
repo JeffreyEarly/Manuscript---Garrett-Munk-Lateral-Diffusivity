@@ -118,7 +118,7 @@ packfig(1,3);
 tightfig;
 leg.Position = leg.Position + [0.035 0.035 0 0];
 
-% print('-depsc','VariancesVsDepth.eps')
+print('-depsc','../figures/VariancesVsDepth.eps')
 
 % plot(1e4*(Euv + Ew + N2.*Eeta)/2,z), hold on
 % plot(1e4*(Euv_const + Ew_const + N0_const*N0_const.*Eeta_const)/2,z)
@@ -176,10 +176,10 @@ packfig(1,3);
 tightfig;
 
 
-% print('-depsc','VariancesVsDepthWKB.eps')
+print('-depsc','../figures/VariancesVsDepthWKB.eps')
 
-E = 0.5*(Euv + Ew + N2.*Eeta);
-Etotal = trapz(z,E);
+% E = 0.5*(Euv + Ew + N2.*Eeta);
+% Etotal = trapz(z,E);
 
 return
 

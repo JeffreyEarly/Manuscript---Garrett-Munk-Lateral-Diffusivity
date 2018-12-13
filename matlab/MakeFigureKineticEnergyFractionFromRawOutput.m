@@ -133,20 +133,20 @@ end
 %
 
 % These are the values iMode, iK used in the MakeFiguresAutocorrelations
-ExampleWaveJ = [2 228];
-ExampleWaveK = [8 12];
+ExampleWaveJ = [8 5];
+ExampleWaveK = [8 55];
 
-ExampleVortexJ = 27;
-ExampleVortexK = 20;
+ExampleVortexJ = 8;
+ExampleVortexK = 55;
 
 % Compute the Rossby radius of deformation for each geostrophic mode
-N0 = 5.2e-3;
-D = 4000;
-z = linspace(-D,0,1024)';
-im = InternalModesConstantStratification(N0,[-D 0],z,33);
-[F,G,h] = im.ModesAtFrequency(0.0);
-Lr = sqrt(9.81*h(j))/im.f0;
-kr = 1./Lr; % I think it should *not* be multiplied by 2*pi, because in the dispersion relation it adds directly to k and l.
+% N0 = 5.2e-3;
+% D = 4000;
+% z = linspace(-D,0,1024)';
+% im = InternalModesConstantStratification(N0,[-D 0],z,33);
+% [F,G,h] = im.ModesAtFrequency(0.0);
+% Lr = sqrt(9.81*h(j))/im.f0;
+% kr = 1./Lr; % I think it should *not* be multiplied by 2*pi, because in the dispersion relation it adds directly to k and l.
 
 FigureSize = [50 50 figure_width_2col+8 225*scaleFactor];
 fig1 = figure('Units', 'points', 'Position', FigureSize,'Name','Wave-Vortex Energy');
@@ -196,10 +196,10 @@ xticks(ticks_x)
 xticklabels(labels_x)
 xlabel('wavelength (km)', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
 
-hold on, plot(kr,j, 'LineWidth', 2.0*scaleFactor, 'Color', 1.0*[1 1 1])
+% hold on, plot(kr,j, 'LineWidth', 2.0*scaleFactor, 'Color', 1.0*[1 1 1])
 
-% [~,~,~,kk] = im.ModesAtFrequency(1.5*2*pi/86400);
-% plot( kk,1:length(kk), '--', 'LineWidth', 2.0*scaleFactor, 'Color', 1.0*[1 1 1])
+[~,~,~,kk] = wavemodel.internalModes.ModesAtFrequency(2.0*2*pi/86400);
+plot( kk,1:length(kk), '--', 'LineWidth', 2.0*scaleFactor, 'Color', 1.0*[1 1 1])
 
 p2.TickDir = 'out';
 
@@ -229,7 +229,7 @@ jpcolor( k, j, abs(log10(1-HKE_fraction.') )); xlog, ylog, shading flat, hold on
 plot( k_damp, j_damp, 'LineWidth', 4, 'Color', 0*[1 1 1])
 plot( k_damp, j_damp, 'LineWidth', 2, 'Color', [1 1 1])
 
-[~,~,~,kk] = im.ModesAtFrequency(4*2*pi/86400);
+% [~,~,~,kk] = im.ModesAtFrequency(2.0*2*pi/86400);
 plot( kk,1:length(kk), '--', 'LineWidth', 2.0*scaleFactor, 'Color', 1.0*[1 1 1])
 
 set( gca, 'FontSize', figure_axis_tick_size);
@@ -261,4 +261,4 @@ p2.Position = [p2.Position(1) p2.Position(2) 0.20 p2.Position(4)];
 p3.OuterPosition = [0.66 p3.OuterPosition(2) 0.28 p3.OuterPosition(4)];
 p3.Position = [p3.Position(1) p3.Position(2) 0.20 p3.Position(4)];
 
-print('-dpng', '-r300', sprintf('EnergyAndEnergyFraction-%s.png',runtype))
+print('-dpng', '-r300', sprintf('../figures/EnergyAndEnergyFraction-%s.png',runtype))

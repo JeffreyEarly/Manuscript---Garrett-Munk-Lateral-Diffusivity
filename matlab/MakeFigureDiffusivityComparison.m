@@ -6,7 +6,7 @@ maxDiffusivity = 1.0;
 
 load('../data/2018_12/particles_LIN.mat');
 
-tIndices = 1:30:length(t);
+tIndices = 1:4:length(t);
 
 nLevels = size(x,2)/floatsPerLevel;
 
@@ -38,6 +38,10 @@ for zLevel=1:nLevels
     yMean = kappa_r(zLevel,:);
     yStdErr = std_error(zLevel,:);
     
+    yStdErr(xMean==0) = [];
+    yMean(xMean==0) = [];
+    xMean(xMean==0) = [];
+    
     errorbar(xMean/1e3, yMean,2*yStdErr), hold on
     if (max(yMean+2*yStdErr)>maxDiffusivity)
         maxDiffusivity = max(yMean+2*yStdErr);
@@ -52,7 +56,7 @@ text(250,0.9,'Linear')
 
 load('../data/2018_12/particles_NL.mat');
 
-tIndices = 1:30:length(t);
+tIndices = 1:4:length(t);
 
 nLevels = size(x,2)/floatsPerLevel;
 
@@ -83,6 +87,10 @@ for zLevel=1:nLevels
     yMean = kappa_r(zLevel,:);
     yStdErr = std_error(zLevel,:);
     
+    yStdErr(xMean==0) = [];
+    yMean(xMean==0) = [];
+    xMean(xMean==0) = [];
+    
     errorbar(xMean/1e3, yMean,2*yStdErr), hold on
     if (max(yMean+2*yStdErr)>maxDiffusivity)
         maxDiffusivity = max(yMean+2*yStdErr);
@@ -100,5 +108,5 @@ subplot(sp1)
 ylim([0 1.0*maxDiffusivity])
 
 packfig(2,1)
-print('-depsc2', sprintf('DiffusivityVsScaleLinNonlin_%s_%s.eps',diffusivityMetric,diffusivityMethod))
+print('-depsc2', sprintf('../figures/DiffusivityVsScaleLinNonlin_%s_%s.eps',diffusivityMetric,diffusivityMethod))
 

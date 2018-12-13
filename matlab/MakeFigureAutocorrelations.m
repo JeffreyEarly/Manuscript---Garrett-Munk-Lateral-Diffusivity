@@ -12,7 +12,7 @@ ReadOverNetwork = 0;
 if ReadOverNetwork == 1
     baseURL = '/Volumes/seattle_data1/cwortham/research/nsf_iwv/model_raw/';
 else
-    baseURL = '/Volumes/Samsung_T5/nsf_iwv/2018_11/';
+    baseURL = '/Volumes/Samsung_T5/nsf_iwv/2018_12/';
 end
 
 if strcmp(runtype,'linear')
@@ -59,23 +59,28 @@ for i=1:length(variables)
     variableIDs(i) = netcdf.inqVarID(ncid,variables{i});
 end
 
-% Fully linear
+% Fully linear wave
 iVars = 1:4;
-iMode = 2;
+iMode = 8;
 iK = 8;
+type = 'Wave';
 titlestring = sprintf('Linear wave coefficients (k,j) = (%d km,%d)',round(2*pi/kAxis(iK)/1e3),iMode);
 
-% Partiatially nonlinear
+% Nonlinear wave
+iVars = 1:4;
+iMode = 5;
+iK = 55;
+type = 'Wave';
+titlestring = sprintf('Linear wave coefficients (k,j) = (%d km,%d)',round(2*pi/kAxis(iK)/1e3),iMode);
+
+% Vortex in nonlinear wave region
 iVars = 5:6;
-iMode = 27;
-iK = 20;
+iMode = 5;
+iK = 55;
+type = 'Vortex';
 titlestring = sprintf('Linear vortex coefficients (k,j) = (%d km,%d)',round(2*pi/kAxis(iK)/1e3),iMode);
 
-% Fully nonlinear
-iVars = 1:4;
-iMode = 228;
-iK = 12;
-titlestring = sprintf('Linear wave coefficients (k,j) = (%d km,%d)',round(2*pi/kAxis(iK)/1e3),iMode);
+
 
 ExampleSeries = zeros(length(t),5);
 
@@ -145,4 +150,4 @@ ylabel('Correlation', 'FontSize', figure_axis_label_size, 'FontName', figure_fon
 xlabel('time (days)', 'FontSize', figure_axis_label_size, 'FontName', figure_font)
 title('Autocorrelation')
 
-print('-depsc',sprintf('Autocorrelation_k_%d_j_%d.eps',iK,iMode))
+print('-depsc',sprintf('../figures/Autocorrelation%s_k_%d_j_%d.eps',type,iK,iMode))

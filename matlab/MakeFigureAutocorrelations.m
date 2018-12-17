@@ -150,4 +150,4 @@ ylabel('Correlation', 'FontSize', figure_axis_label_size, 'FontName', figure_fon
 xlabel('time (days)', 'FontSize', figure_axis_label_size, 'FontName', figure_font)
 title('Autocorrelation')
 
-print('-depsc',sprintf('../figures/Autocorrelation%s_k_%d_j_%d.eps',type,iK,iMode))
+% print('-depsc',sprintf('../figures/Autocorrelation%s_k_%d_j_%d.eps',type,iK,iMode))

@@ -1,5 +1,5 @@
 runtype = 'nonlinear';
-ReadOverNetwork = 0;
+ReadOverNetwork = 1;
 
 if ReadOverNetwork == 1
     baseURL = '/Volumes/seattle_data1/cwortham/research/nsf_iwv/model_raw/';
@@ -11,7 +11,7 @@ end
 if strcmp(runtype,'linear')
     file = strcat(baseURL,'EarlyV2_GM_LIN_unforced_damped_restart');
 elseif strcmp(runtype,'nonlinear')
-    file = strcat(baseURL,'EarlyV2_GM_NL_forced_damped_restart');
+    file = strcat(baseURL,'EarlyV2_GM_NL_forced_damped_restartblob');
 else
     error('invalid run type.');
 end
@@ -84,13 +84,13 @@ if ~exist(outputfile,'file')
         m_xz(iFile) = sum(sum(sum(Xc.*Zc.*s2.*dV)))/m(iFile);
         m_yz(iFile) = sum(sum(sum(Yc.*Zc.*s2.*dV)))/m(iFile);
     end
-    save(outputfile,'t','m','m_x', 'm_y','m_z','m_xx','m_xy','m_yy','m_zz','m_xz','m_yz');
+%     save(outputfile,'t','m','m_x', 'm_y','m_z','m_xx','m_xy','m_yy','m_zz','m_xz','m_yz');
 else
     load(outputfile);
 end
 
 D2 = (m_xx+m_yy)/2;
-D2 = m_xx;
+% D2 = m_xx;
 
 % [xbar,f]  = FourierTransformForward(t,(m_xx+m_yy)/2,1);
 % figure, plot(f,abs(xbar).^2),ylog

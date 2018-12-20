@@ -24,15 +24,15 @@ nFiles = WM.NumberOf3DOutputFiles;
 wavemodel.InitializeWithHorizontalVelocityAndDensityPerturbationFields(t0,u,v,rho_prime);
 
 U = max(max(max(abs(sqrt(u.^2 + v.^2)))));
-T = min(abs(2*pi/wavemodel.Omega(:)));
+T = min(abs(2*pi./wavemodel.Omega(:)));
 
 
 [t_p,x_p,y_p,z_p] = WM.ParticleTrajectories;
 
 iParticle = 101;
-p0 = [x_p(1,iParticle), y_p(1,iParticle), z_p(1,iParticle)];
+p0 = [x_p(1,iParticle), y_p(1,iParticle), z_p(1,iParticle)-wavemodel.Lz];
 
-f = @(t,y) wavemodel.VelocityAtTimePositionVector(t,y,'spline');
+f = @(t,y) wavemodel.DrifterVelocityAtTimePositionVector(t,y,'exact');
 
 % Let's do fixed step size integrator.
 cfl = 0.25;
@@ -46,6 +46,23 @@ else
     deltaT = oscillatoryDT;
 end
 
+t_indices = 1:50;
+t_in = t_p(t_indices);
 
+% p2 = ode4(f,t_in, p0');
+[t,p2] = ode45(f,t_in, p0,odeset('RelTol',1e-5,'AbsTol',1e-8));
 
-% p2 = ode2(f,t_in, p0')
+x2 = p2(:,1);
+y2 = p2(:,2);
+z2 = p2(:,3);
+
+figure
+subplot(3,1,1)
+plot(t_in,x2)
+hold on, plot(t_in,x_p(t_indices,iParticle))
+subplot(3,1,2)
+plot(t_in,y2)
+hold on, plot(t_in,y_p(t_indices,iParticle))
+subplot(3,1,3)
+plot(t_in,z2)
+hold on, plot(t_in,z_p(t_indices,iParticle)-wavemodel.Lz)

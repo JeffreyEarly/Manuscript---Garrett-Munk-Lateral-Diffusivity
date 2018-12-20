@@ -11,7 +11,7 @@
 scaleFactor = 1;
 LoadFigureDefaults;
 
-runtype = 'nonlinear';
+runtype = 'linear';
 ReadOverNetwork = 0;
 
 if ReadOverNetwork == 1
@@ -44,8 +44,8 @@ t_max = WM.VariableFieldsFrom3DOutputFileAtIndex(maxFileIndex,'t');
 [t,u,v,w,rho_prime] = WM.VariableFieldsFrom3DOutputFileAtIndex(maxFileIndex,'t','u','v','w','rho_prime');
 wavemodel.InitializeWithHorizontalVelocityAndDensityPerturbationFields(t,u,v,rho_prime);
 
-waveHKE_full = wavemodel.Ppm_HKE_factor .* ( abs(wavemodel.Amp_plus).^2 + abs(wavemodel.Amp_minus).^2 );
-vortexHKE_full = wavemodel.P0_HKE_factor .* abs(wavemodel.B).^2;
+waveHKE_full = wavemodel.Apm_HKE_factor .* ( abs(wavemodel.Amp_plus).^2 + abs(wavemodel.Amp_minus).^2 );
+vortexHKE_full = wavemodel.B_HKE_factor .* abs(wavemodel.B).^2;
 
 % Now we need to figure out how to display this information...
 

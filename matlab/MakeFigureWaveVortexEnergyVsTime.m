@@ -5,6 +5,7 @@ if ReadOverNetwork == 1
     baseURL = '/Volumes/seattle_data1/cwortham/research/nsf_iwv/model_raw/';
 else
     baseURL = '/Volumes/Samsung_T5/nsf_iwv/2018_12/';
+    baseURL = '/Users/jearly/Documents/nsf_iw/';
 end
 
 if strcmp(runtype,'linear')
@@ -85,3 +86,5 @@ plot(t/86400,WaveEnergy_minus)
 subplot(2,1,2)
 plot(t/86400,VortexEnergy), hold on
 plot(t/86400,Vortex0Energy)
+xlabe('days')
+ylabel('energy')

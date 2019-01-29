@@ -48,9 +48,9 @@ t = ncread(file, 't');
 nT = length(t);
 
 variables = {'Ap_realp', 'Ap_imagp', 'Am_realp', 'Am_imagp', 'B_realp', 'B_imagp'};
-Ppm_HKE_factor = wavemodel.Ppm_HKE_factor;
-P0_HKE_factor = wavemodel.P0_HKE_factor;
-conversion_factor = {Ppm_HKE_factor,Ppm_HKE_factor,Ppm_HKE_factor,Ppm_HKE_factor,P0_HKE_factor,P0_HKE_factor};
+Apm_HKE_factor = wavemodel.Apm_HKE_factor;
+B_HKE_factor = wavemodel.B_HKE_factor;
+conversion_factor = {Apm_HKE_factor,Apm_HKE_factor,Apm_HKE_factor,Apm_HKE_factor,B_HKE_factor,B_HKE_factor};
 Nvars = length(variables);
 
 ncid = netcdf.open(file);
@@ -150,4 +150,4 @@ ylabel('Correlation', 'FontSize', figure_axis_label_size, 'FontName', figure_fon
 xlabel('time (days)', 'FontSize', figure_axis_label_size, 'FontName', figure_font)
 title('Autocorrelation')
 
-% print('-depsc',sprintf('../figures/Autocorrelation%s_k_%d_j_%d.eps',type,iK,iMode))
+print('-depsc',sprintf('../figures/Autocorrelation%s_k_%d_j_%d.eps',type,iK,iMode))

@@ -4,7 +4,7 @@ ReadOverNetwork = 0;
 if ReadOverNetwork == 1
     baseURL = '/Volumes/seattle_data1/cwortham/research/nsf_iwv/model_raw/';
 else
-    baseURL = '/Volumes/Samsung_T5/nsf_iwv/2018_12/';
+    baseURL = '/Volumes/Samsung_T5/nsf_iwv/2019_01/';
 end
 
 if strcmp(runtype,'linear')
@@ -32,7 +32,7 @@ T = min(abs(2*pi./wavemodel.Omega(:)));
 iParticle = 101;
 p0 = [x_p(1,iParticle), y_p(1,iParticle), z_p(1,iParticle)-wavemodel.Lz];
 
-f = @(t,y) wavemodel.DrifterVelocityAtTimePositionVector(t,y,'exact');
+f = @(t,y) wavemodel.VelocityAtTimePositionVector(t,y,'spline');
 
 % Let's do fixed step size integrator.
 cfl = 0.25;

@@ -1,13 +1,13 @@
 scaleFactor = 1;
 LoadFigureDefaults;
 
-runtype = 'linear';
+runtype = 'nonlinear';
 
 if strcmp(runtype,'linear')
-    load('../data/2018_12/particles_LIN.mat');
+    load('../data/2019_01/particles_LIN.mat');
     thetitle = 'Pairwise particle dispersion, linear simulation';
 elseif strcmp(runtype,'nonlinear')
-    load('../data/2018_12/particles_NL.mat');
+    load('../data/2019_01/particles_NL.mat');
     thetitle = 'Pairwise particle dispersion, nonlinear simulation';
 else
     error('invalid run type.');

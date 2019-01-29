@@ -1,17 +1,17 @@
 runtype = 'nonlinear';
-ReadOverNetwork = 1;
+ReadOverNetwork = 0;
 
 if ReadOverNetwork == 1
     baseURL = '/Volumes/seattle_data1/cwortham/research/nsf_iwv/model_raw/';
 else
-    baseURL = '/Volumes/Samsung_T5/nsf_iwv/2018_12/';
+    baseURL = '/Volumes/Samsung_T5/nsf_iwv/2019_01/';
 %     baseURL = '/Users/jearly/Documents/ManuscriptRepositories/garrett-munk-lateral-diffusivity/data/2018_11/';
 end
 
 if strcmp(runtype,'linear')
     file = strcat(baseURL,'EarlyV2_GM_LIN_unforced_damped_restart');
 elseif strcmp(runtype,'nonlinear')
-    file = strcat(baseURL,'EarlyV2_GM_NL_forced_damped_restartblob');
+    file = strcat(baseURL,'EarlyV2_GM_NL_forced_damped_restart');
 else
     error('invalid run type.');
 end
@@ -84,7 +84,7 @@ if ~exist(outputfile,'file')
         m_xz(iFile) = sum(sum(sum(Xc.*Zc.*s2.*dV)))/m(iFile);
         m_yz(iFile) = sum(sum(sum(Yc.*Zc.*s2.*dV)))/m(iFile);
     end
-%     save(outputfile,'t','m','m_x', 'm_y','m_z','m_xx','m_xy','m_yy','m_zz','m_xz','m_yz');
+    save(outputfile,'t','m','m_x', 'm_y','m_z','m_xx','m_xy','m_yy','m_zz','m_xz','m_yz');
 else
     load(outputfile);
 end
@@ -147,7 +147,7 @@ plot(X/86400,(D2_coeff(2)*X+D2_coeff(1))/1e6,'k--')
 legend('D2','D2 filtered','linear fit')
 title(sprintf('isotropic diffusivity %.2f +/- %.2f m^2/s at scale %.0f km',D2_coeff(2)/2,D2_err(2), sqrt(D2(1))/1e3 ));
 ylabel('km^2')
-% print('-depsc',sprintf('TracerLateral-%s.eps',runtype))
+print('-depsc',sprintf('../figures/TracerLateral-%s.eps',runtype))
 
 figure('Name',sprintf('VerticalDiffusivityOfTracer-%s',runtype))
 subplot(2,1,1)
@@ -158,4 +158,4 @@ plot(t/86400,m_zz), hold on
 plot(X/86400,Z,'LineWidth',2)
 title(sprintf('isotropic diffusivity %.2g +/- %.2g m^2/s at scale %.2f m',Mzz_coeff(2)/2,Mzz_err(2), sqrt(m_zz(1)) ));
 ylabel('m^2')
-% print('-depsc',sprintf('TracerVertical-%s.eps',runtype))
+print('-depsc',sprintf('../figures/TracerVertical-%s.eps',runtype))

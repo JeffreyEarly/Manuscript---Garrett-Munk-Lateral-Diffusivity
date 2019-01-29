@@ -1,7 +1,7 @@
 scaleFactor = 1;
 LoadFigureDefaults;
 
-mooringsfile = '../data/2018_12/EarlyV2_GM_NL_forced_damped_restart_moorings.mat';
+mooringsfile = '../data/2019_01/EarlyV2_GM_NL_forced_damped_restart_moorings.mat';
 % mooringsfile = '../data/2018_12/EarlyV2_GM_LIN_unforced_damped_restart_moorings.mat';
 
 % mooringsfile = '/Volumes/Samsung_T5/nsf_iwv/2018_11/EarlyV2_GMexp_NL_forced_damped_64cube_moorings.mat';

@@ -50,12 +50,12 @@ b_z = DiffSine(z,b);
 % this should be 1, if we've done this correctly
 bbar_z = wavemodel.N2AtDepth(wavemodel.Z)/N0/N0;
 
-PV_x = zeta_x .* b_x;
-PV_y = zeta_y .* b_y;
-PV_z = (zeta_z + f0) .* b_z + zeta_z .* bbar_z;
+PV_x = zeta_x .* b_x/f0;
+PV_y = zeta_y .* b_y/f0;
+PV_z = (zeta_z/f0 + 1) .* b_z + zeta_z .* bbar_z/f0;
 
-PV_linear = zeta_z .* bbar_z + f0 * b_z;
-PV_z_nonlinear = zeta_z .* b_z;
+PV_linear = zeta_z .* bbar_z/f0 + b_z;
+PV_z_nonlinear = zeta_z .* b_z/f0;
 
 PV = PV_x + PV_y + PV_z;
 
@@ -69,6 +69,11 @@ PV = PV_x + PV_y + PV_z;
 
 [K,L,J] = ndgrid(k,l,j);
 Kh = sqrt(K.*K + L.*L);
+
+figure
+subplot(2,1,1), pcolor(squeeze(PV(:,1,:)).'), shading flat, caxis([-.2 .2])
+subplot(2,1,2), pcolor(squeeze(PV_linear(:,1,:)).'), shading flat, caxis([-.2 .2]),
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -180,18 +185,20 @@ fig1.PaperUnits = 'points';
 fig1.PaperPosition = FigureSize;
 fig1.PaperSize = [FigureSize(3) FigureSize(4)];
 
+[K,J] = ndgrid(k,j);
+
 p1 = subplot(1,3,1);
-jpcolor( k, j, linearPV.' ); xlog, ylog, shading flat, hold on
+jpcolor( k, j, log10(abs(K.*J.*linearPV).') ); xlog, ylog, shading flat, hold on
 plot( k_damp, j_damp, 'LineWidth', 4, 'Color', 0*[1 1 1])
 plot( k_damp, j_damp, 'LineWidth', 2, 'Color', [1 1 1])
 scatter( k(ExampleWaveK), ExampleWaveJ, 25, 0*[1 1 1], 'filled' );
 scatter( k(ExampleWaveK), ExampleWaveJ, 8, 1*[1 1 1], 'filled' );
 % plot( sqrt(N2(GM.zInternal)), axis_depth, 'LineWidth', 2.0*scaleFactor, 'Color', 1.0*[1 1 1])
-% caxis([-10 0])
+caxis([-13 -9])
 set( gca, 'FontSize', figure_axis_tick_size);
 % set(gca, 'YTick', 1000*(-5:1:0));
 % ylabel('depth (m)', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
-title('wave energy (m^3/s^2)', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
+title('linear PV', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
 
 xticks(ticks_x)
 xticklabels(labels_x)
@@ -208,15 +215,15 @@ cb1.TickLabels = {'10^{-10}', '10^{-8}', '10^{-6}', '10^{-4}', '10^{-2}', '10^{0
 % ylabel(cb, 'depth integrated energy (m^3/s^2)', 'FontSize', figure_axis_label_size, 'FontName', figure_font)
 
 p2 = subplot(1,3,2);
-jpcolor( k, j, ertelPV.' ); xlog, ylog, shading flat, hold on
+jpcolor( k, j, log10(abs(K.*J.*ertelPV).') ); xlog, ylog, shading flat, hold on
 plot( k_damp, j_damp, 'LineWidth', 4, 'Color', 0*[1 1 1])
 plot( k_damp, j_damp, 'LineWidth', 2, 'Color', [1 1 1])
 scatter( k(ExampleVortexK), ExampleVortexJ, 25, 0*[1 1 1], 'filled' );
 scatter( k(ExampleVortexK), ExampleVortexJ, 8, 1*[1 1 1], 'filled' );
-% caxis([-10 -5])
+caxis([-13 -9])
 set( gca, 'FontSize', figure_axis_tick_size);
 set(gca, 'YTick', []);
-title('vortex energy (m^3/s^2)', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
+title('Ertel PV', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
 xticks(ticks_x)
 xticklabels(labels_x)
 xlabel('wavelength (km)', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
@@ -240,7 +247,7 @@ cb2.TickLabels = {'10^{-10}', '10^{-9}', '10^{-8}', '10^{-7}', '10^{-6}', '10^{-
 % Energy fraction
 %
 
-HKE_fraction = (ertelPV - linearPV)./linearPV;
+HKE_fraction = ertelPV./linearPV;
 
 % FigureSize = [50 50 figure_width_1col+8 225*scaleFactor];
 % fig1 = figure('Units', 'points', 'Position', FigureSize);
@@ -275,9 +282,10 @@ p3.TickDir = 'out';
 
 colormap( cmocean('dense') );
 cb3 = colorbar('eastoutside');
+caxis([-1 1])
 % caxis(abs(log10(1-[(0.5) (0.99999)])))
-cb3.Ticks = abs(log10(1-[(0.5) (0.9) (0.99) (0.999) (0.9999) (0.99999)]));
-cb3.TickLabels = {'50%', '90%', '99%', '99.9%', '99.99%', '99.999%'};
+% cb3.Ticks = abs(log10(1-[(0.5) (0.9) (0.99) (0.999) (0.9999) (0.99999)]));
+% cb3.TickLabels = {'50%', '90%', '99%', '99.9%', '99.99%', '99.999%'};
 
 p1.OuterPosition = [0 p1.OuterPosition(2) 0.28 p1.OuterPosition(4)];
 p1.Position = [p1.Position(1) p1.Position(2) 0.20 p1.Position(4)];

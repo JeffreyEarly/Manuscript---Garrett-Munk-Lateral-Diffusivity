@@ -11,7 +11,7 @@ end
 if strcmp(runtype,'linear')
     dynamicalfile = strcat(baseURL,'EarlyV2_GM_LIN_unforced_damped_restart');
 elseif strcmp(runtype,'nonlinear')
-    dynamicalfile = strcat(baseURL,'EarlyV2_GM_NL_forced_damped'); 
+    dynamicalfile = strcat(baseURL,'EarlyV2_GM_NL_forced_damped_quartergrid'); 
 else
     error('invalid run type.');
 end
@@ -76,15 +76,17 @@ if ~exist(outputfile,'file')
         Vortex0Energy(iTime) = sum(sum(sum(B2(:))));
     end
     
-    save(outputfile,'t','WaveEnergy_plus','WaveEnergy_minus','Vortex0Energy','VortexEnergy')
+%     save(outputfile,'t','WaveEnergy_plus','WaveEnergy_minus','Vortex0Energy','VortexEnergy')
 end
 
 figure
 subplot(2,1,1)
 plot(t/86400,WaveEnergy_plus), hold on
 plot(t/86400,WaveEnergy_minus)
+legend('\omega_+','\omega_-')
 subplot(2,1,2)
 plot(t/86400,VortexEnergy), hold on
 plot(t/86400,Vortex0Energy)
-xlabe('days')
+legend('vortex', 'mean')
+xlabel('days')
 ylabel('energy')

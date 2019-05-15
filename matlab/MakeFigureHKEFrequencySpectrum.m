@@ -1,7 +1,10 @@
 scaleFactor = 1;
 LoadFigureDefaults;
 
-mooringsfile = '../data/2019_01/EarlyV2_GM_NL_forced_damped_restart_moorings.mat';
+mooringsfile = '../data/2019_05/EarlyV2_GM_NL_forced_damped_spunupHiTide_moorings.mat';
+mooringsfile = '../data/2019_05/EarlyV2_GM_NL_forced_damped_moorings.mat';
+
+
 % mooringsfile = '../data/2018_12/EarlyV2_GM_LIN_unforced_damped_restart_moorings.mat';
 
 % mooringsfile = '/Volumes/Samsung_T5/nsf_iwv/2018_11/EarlyV2_GMexp_NL_forced_damped_64cube_moorings.mat';
@@ -9,6 +12,9 @@ mooringsfile = '../data/2019_01/EarlyV2_GM_NL_forced_damped_restart_moorings.mat
 load(mooringsfile)
 
 nT = length(t);
+
+
+
 nDepths = length(depths);
 depthLoop = length(depths):-4:1;
 
@@ -59,7 +65,7 @@ legend(labels)
 xlim([-12 12])
 ylim([2e-2 4e2])
 
-print('-depsc','../figures/HorizontalVelocitySpectrum.eps')
+print('-depsc','../data/2019_05/figures_EarlyV2_GM_NL_forced_damped/HorizontalVelocitySpectrum.eps')
 
 dOmega = omega(2)-omega(1);
 E_uv_theory = sum(S_theory,1,'omitnan')*dOmega;

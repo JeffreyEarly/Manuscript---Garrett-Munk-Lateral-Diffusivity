@@ -6,12 +6,13 @@ if ReadOverNetwork == 1
 else
     baseURL = '/Volumes/Samsung_T5/nsf_iwv/2018_12/';
     baseURL = '/Users/jearly/Documents/nsf_iw/';
+    baseURL = '/Volumes/Samsung_T5/nsf_iwv/2019_05/';
 end
 
 if strcmp(runtype,'linear')
     dynamicalfile = strcat(baseURL,'EarlyV2_GM_LIN_unforced_damped_restart');
 elseif strcmp(runtype,'nonlinear')
-    dynamicalfile = strcat(baseURL,'EarlyV2_GM_NL_forced_damped_quartergrid'); 
+    dynamicalfile = strcat(baseURL,'EarlyV2_GM_NL_forced_damped'); 
 else
     error('invalid run type.');
 end
@@ -84,9 +85,13 @@ subplot(2,1,1)
 plot(t/86400,WaveEnergy_plus), hold on
 plot(t/86400,WaveEnergy_minus)
 legend('\omega_+','\omega_-')
+ylabel('energy (m^3/s^2)')
 subplot(2,1,2)
 plot(t/86400,VortexEnergy), hold on
 plot(t/86400,Vortex0Energy)
 legend('vortex', 'mean')
 xlabel('days')
-ylabel('energy')
+ylabel('energy (m^3/s^2)')
+packfig(2,1)
+
+print('-depsc','../data/2019_05/figures_EarlyV2_GM_NL_forced_damped/WaveVortexEnergyVsTime.eps')

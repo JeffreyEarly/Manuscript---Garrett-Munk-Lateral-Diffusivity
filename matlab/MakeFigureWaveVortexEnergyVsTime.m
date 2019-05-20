@@ -12,7 +12,7 @@ end
 if strcmp(runtype,'linear')
     dynamicalfile = strcat(baseURL,'EarlyV2_GM_LIN_unforced_damped_restart');
 elseif strcmp(runtype,'nonlinear')
-    dynamicalfile = strcat(baseURL,'EarlyV2_GM_NL_forced_damped'); 
+    dynamicalfile = strcat(baseURL,'EarlyV2_GM_NL_forced_damped_restart'); 
 else
     error('invalid run type.');
 end
@@ -94,4 +94,4 @@ xlabel('days')
 ylabel('energy (m^3/s^2)')
 packfig(2,1)
 
-print('-depsc','../data/2019_05/figures_EarlyV2_GM_NL_forced_damped/WaveVortexEnergyVsTime.eps')
+print('-depsc','../data/2019_05/figures_EarlyV2_GM_NL_forced_damped_restart/WaveVortexEnergyVsTime.eps')

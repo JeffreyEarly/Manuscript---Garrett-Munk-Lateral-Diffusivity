@@ -12,13 +12,13 @@ ReadOverNetwork = 0;
 if ReadOverNetwork == 1
     baseURL = '/Volumes/seattle_data1/cwortham/research/nsf_iwv/model_raw/';
 else
-    baseURL = '/Volumes/Samsung_T5/nsf_iwv/2019_01/';
+    baseURL = '/Volumes/Samsung_T5/nsf_iwv/2019_05/';
 end
 
 if strcmp(runtype,'linear')
 
 elseif strcmp(runtype,'nonlinear')
-    load('../data/2018_12/EarlyV2_GM_NL_forced_damped_restart_decomp.mat');
+     load('/Volumes/Samsung_T5/nsf_iwv/2019_05//EarlyV2_GM_NL_forced_damped_restart_decomp.mat');
     file = strcat(baseURL,'EarlyV2_GM_NL_forced_damped_restart'); 
 else
     error('invalid run type.');
@@ -116,7 +116,7 @@ colormap( cmocean('dense') );
 cb = colorbar('eastoutside');
 caxis([0 1])
 
-print('-dpng', '-r300', sprintf('../figures/WaveNonlinearity.png'))
+print('-dpng', '-r300', sprintf('../figures_2019_05/WaveNonlinearity.png'))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -150,4 +150,4 @@ colormap( cmocean('dense') );
 cb = colorbar('eastoutside');
 caxis([0 1])
 
-print('-dpng', '-r300', sprintf('../figures/VortexNonlinearity.png'))
+print('-dpng', '-r300', sprintf('../figures_2019_05/VortexNonlinearity.png'))

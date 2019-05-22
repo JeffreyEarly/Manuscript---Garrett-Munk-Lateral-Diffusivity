@@ -12,7 +12,7 @@ ReadOverNetwork = 0;
 if ReadOverNetwork == 1
     baseURL = '/Volumes/seattle_data1/cwortham/research/nsf_iwv/model_raw/';
 else
-    baseURL = '/Volumes/Samsung_T5/nsf_iwv/2018_12/';
+    baseURL = '/Volumes/Samsung_T5/nsf_iwv/2019_05/';
 end
 
 if strcmp(runtype,'linear')
@@ -150,4 +150,4 @@ ylabel('Correlation', 'FontSize', figure_axis_label_size, 'FontName', figure_fon
 xlabel('time (days)', 'FontSize', figure_axis_label_size, 'FontName', figure_font)
 title('Autocorrelation')
 
-print('-depsc',sprintf('../figures/Autocorrelation%s_k_%d_j_%d.eps',type,iK,iMode))
+print('-depsc',sprintf('../figures_2019_05/Autocorrelation%s_k_%d_j_%d.eps',type,iK,iMode))

@@ -4,7 +4,7 @@ diffusivityMethod = 'powspec';
 
 maxDiffusivity = 1.0;
 
-load('../data/2018_12/particles_LIN.mat');
+load('../data/2019_01/particles_LIN.mat');
 
 tIndices = 1:4:length(t);
 
@@ -54,7 +54,7 @@ title(sprintf('horizontal *relative* diffusivity at different depths (%s method)
 ylim([0 0.55])
 text(250,0.9,'Linear')
 
-load('../data/2018_12/particles_NL.mat');
+load('../data/2019_01/particles_NL.mat');
 
 tIndices = 1:4:length(t);
 
@@ -108,5 +108,5 @@ subplot(sp1)
 ylim([0 1.0*maxDiffusivity])
 
 packfig(2,1)
-print('-depsc2', sprintf('../figures/DiffusivityVsScaleLinNonlin_%s_%s.eps',diffusivityMetric,diffusivityMethod))
+% print('-depsc2', sprintf('../figures_2019_05/DiffusivityVsScaleLinNonlin_%s_%s.eps',diffusivityMetric,diffusivityMethod))
 

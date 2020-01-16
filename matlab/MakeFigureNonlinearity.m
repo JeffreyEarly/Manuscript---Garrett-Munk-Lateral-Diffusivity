@@ -12,14 +12,14 @@ ReadOverNetwork = 0;
 if ReadOverNetwork == 1
     baseURL = '/Volumes/seattle_data1/cwortham/research/nsf_iwv/model_raw/';
 else
-    baseURL = '/Volumes/Samsung_T5/nsf_iwv/2019_05/';
+    baseURL = '/Volumes/Samsung_T5/nsf_iwv/2020_01/';
 end
 
 if strcmp(runtype,'linear')
 
 elseif strcmp(runtype,'nonlinear')
-     load('/Volumes/Samsung_T5/nsf_iwv/2019_05//EarlyV2_GM_NL_forced_damped_restart_decomp.mat');
-    file = strcat(baseURL,'EarlyV2_GM_NL_forced_damped_restart'); 
+    load('/Volumes/Samsung_T5/nsf_iwv/2020_01/EarlyV2_GM_NL_forced_damped_01xGM_decomp.mat');
+    file = strcat(baseURL,'EarlyV2_GM_NL_forced_damped_01xGM'); 
 else
     error('invalid run type.');
 end
@@ -50,7 +50,7 @@ nK = length(k)/2 + 1;
 k_diss = abs(k(1:nK));
 j_diss = 0:max(j); % start at 0, to help with contour drawing
 [K,J] = ndgrid(k_diss,j_diss);
-M = (2*pi/(length(j)*dz))*J/2;
+M = (2*pi/(max(j)*dz))*J/2;
 
 lambda_x = nu_x*(sqrt(-1)*K).^(2*p);
 lambda_z = nu_z*(sqrt(-1)*M).^(2*p);
@@ -96,8 +96,8 @@ fig1.PaperSize = [FigureSize(3) FigureSize(4)];
 jpcolor( k, j, (waveHKEFromVariance./waveHKE)'); xlog, ylog, shading flat, hold on
 plot( k_damp, j_damp, 'LineWidth', 2, 'Color', [1 1 1])
 
-scatter( k(ExampleWaveK), ExampleWaveJ, 25, 0*[1 1 1], 'filled' );
-scatter( k(ExampleWaveK), ExampleWaveJ, 8, 1*[1 1 1], 'filled' );
+% scatter( k(ExampleWaveK), ExampleWaveJ, 25, 0*[1 1 1], 'filled' );
+% scatter( k(ExampleWaveK), ExampleWaveJ, 8, 1*[1 1 1], 'filled' );
 
 [~,~,~,kk] = wavemodel.internalModes.ModesAtFrequency(2*2*pi/86400);
 plot( kk,1:length(kk), '--', 'LineWidth', 2.0*scaleFactor, 'Color', 1.0*[1 1 1])
@@ -116,7 +116,7 @@ colormap( cmocean('dense') );
 cb = colorbar('eastoutside');
 caxis([0 1])
 
-print('-dpng', '-r300', sprintf('../figures_2019_05/WaveNonlinearity.png'))
+% print('-dpng', '-r300', sprintf('../figures_2019_05/WaveNonlinearity.png'))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -133,8 +133,8 @@ fig1.PaperSize = [FigureSize(3) FigureSize(4)];
 jpcolor( k, j, (vortexHKEFromVariance./vortexHKE)'); xlog, ylog, shading flat, hold on
 plot( k_damp, j_damp, 'LineWidth', 2, 'Color', [1 1 1])
 
-scatter( k(ExampleVortexK), ExampleVortexJ, 25, 0*[1 1 1], 'filled' );
-scatter( k(ExampleVortexK), ExampleVortexJ, 8, 1*[1 1 1], 'filled' );
+% scatter( k(ExampleVortexK), ExampleVortexJ, 25, 0*[1 1 1], 'filled' );
+% scatter( k(ExampleVortexK), ExampleVortexJ, 8, 1*[1 1 1], 'filled' );
 
 title('Vortex Nonlinearity', 'FontSize', figure_axis_label_size, 'FontName', figure_font);
 
@@ -150,4 +150,4 @@ colormap( cmocean('dense') );
 cb = colorbar('eastoutside');
 caxis([0 1])
 
-print('-dpng', '-r300', sprintf('../figures_2019_05/VortexNonlinearity.png'))
+% print('-dpng', '-r300', sprintf('../figures_2019_05/VortexNonlinearity.png'))

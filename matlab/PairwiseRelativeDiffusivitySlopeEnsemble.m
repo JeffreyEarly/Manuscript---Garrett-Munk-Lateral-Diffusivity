@@ -1,13 +1,13 @@
 scaleFactor = 1;
 LoadFigureDefaults;
 
-runtype = 'linear';
+runtype = 'nonlinear';
 
 if strcmp(runtype,'linear')
-    load('../data/2019_12/particles_LIN.mat');
+    load('../data/2020_01/particles_LIN.mat');
     thetitle = 'Pairwise particle dispersion, linear simulation';
 elseif strcmp(runtype,'nonlinear')
-    load('../data/2019_05/particles_NL.mat');
+    load('../data/2020_01/particles_5x_NL.mat');
     thetitle = 'Pairwise particle dispersion, nonlinear simulation';
 else
     error('invalid run type.');
@@ -59,4 +59,4 @@ ylabel('m^2/s', 'FontSize', figure_axis_label_size, 'FontName', figure_font)
 ylim([0 1.1*max(kappa+2*kappa_err)])
 set( gca, 'FontSize', figure_axis_tick_size);
 
-print('-dpng', '-r300', sprintf('../data/2019_12/PairwiseParticleDispersion-%s.png',runtype))
+print('-dpng', '-r300', sprintf('../data/2020_01/PairwiseParticleDispersion-5xGM-%s.png',runtype))

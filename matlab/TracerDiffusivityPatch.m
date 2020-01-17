@@ -1,22 +1,22 @@
-runtype = 'linear';
+runtype = 'nonlinear';
 ReadOverNetwork = 0;
 
 if ReadOverNetwork == 1
     baseURL = '/Volumes/seattle_data1/cwortham/research/nsf_iwv/model_raw/';
 else
-    baseURL = '/Volumes/Samsung_T5/nsf_iwv/2019_12/';
+    baseURL = '/Volumes/Samsung_T5/nsf_iwv/2020_01/';
 %     baseURL = '/Users/jearly/Documents/ManuscriptRepositories/garrett-munk-lateral-diffusivity/data/2018_11/';
 end
 
 if strcmp(runtype,'linear')
     file = strcat(baseURL,'EarlyV2_GM_LIN_unforced_damped_restart');
 elseif strcmp(runtype,'nonlinear')
-    file = strcat(baseURL,'EarlyV2_GM_NL_forced_damped_restart');
+    file = strcat(baseURL,'EarlyV2_GM_NL_forced_damped_01xGM');
 else
     error('invalid run type.');
 end
 
-outputfile = sprintf('%stracer_patch_%s.mat',baseURL,runtype);
+outputfile = sprintf('%s_tracer_patch.mat',file);
 
 if ~exist(outputfile,'file')
     WM = WintersModel(file);

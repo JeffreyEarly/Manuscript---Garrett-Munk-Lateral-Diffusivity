@@ -46,11 +46,11 @@ dz = z(2)-z(1);
 nu_x = (-1)^(p+1)*power(dx/pi,2*p) / T_diss;
 nu_z = (-1)^(p+1)*power(dz/pi,2*p) / T_diss;
 
-nK = length(k)/2 + 1;
-k_diss = abs(k(1:nK));
-j_diss = 0:max(j); % start at 0, to help with contour drawing
+nK = length(wavemodel.k)/2 + 1;
+k_diss = abs(wavemodel.k(1:nK));
+j_diss = wavemodel.j; % start at 0, to help with contour drawing
 [K,J] = ndgrid(k_diss,j_diss);
-M = (2*pi/(max(j)*dz))*J/2;
+M = (2*pi/(max(j_diss)*dz))*J/2;
 
 lambda_x = nu_x*(sqrt(-1)*K).^(2*p);
 lambda_z = nu_z*(sqrt(-1)*M).^(2*p);

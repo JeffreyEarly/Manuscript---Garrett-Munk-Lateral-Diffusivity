@@ -7,7 +7,7 @@ if strcmp(runtype,'linear')
     load('../data/2020_01/particles_LIN.mat');
     thetitle = 'Pairwise particle dispersion, linear simulation';
 elseif strcmp(runtype,'nonlinear')
-    load('../data/2020_01/particles_5x_NL.mat');
+    load('/Volumes/Samsung_T5/nsf_iwv/2020_01/EarlyV2_GM_NL_forced_damped_01xGM_particles.mat');
     thetitle = 'Pairwise particle dispersion, nonlinear simulation';
 else
     error('invalid run type.');
@@ -15,7 +15,7 @@ end
 
 nLevels = size(x,2)/floatsPerLevel;
 
-zLevel = 1;
+zLevel = 2;
 zLevelIndices = (zLevel-1)*floatsPerLevel + (1:floatsPerLevel);
 z0 = mean(z(1,zLevelIndices));
 
@@ -59,4 +59,4 @@ ylabel('m^2/s', 'FontSize', figure_axis_label_size, 'FontName', figure_font)
 ylim([0 1.1*max(kappa+2*kappa_err)])
 set( gca, 'FontSize', figure_axis_tick_size);
 
-print('-dpng', '-r300', sprintf('../data/2020_01/PairwiseParticleDispersion-5xGM-%s.png',runtype))
+% print('-dpng', '-r300', sprintf('../data/2020_01/PairwiseParticleDispersion-5xGM-%s.png',runtype))

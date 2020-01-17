@@ -1,10 +1,10 @@
 diffusivityMetric = 'relative';
-diffusivityMethod = 'powspec';
+diffusivityMethod = 'slope';
 
 
 maxDiffusivity = 1.0;
 
-load('../data/2019_01/particles_LIN.mat');
+load('/Volumes/Samsung_T5/nsf_iwv/2020_01/EarlyV2_GM_NL_forced_damped_01xGM_particles.mat');
 
 tIndices = 1:4:length(t);
 
@@ -54,7 +54,7 @@ title(sprintf('horizontal *relative* diffusivity at different depths (%s method)
 ylim([0 0.55])
 text(250,0.9,'Linear')
 
-load('../data/2019_01/particles_NL.mat');
+load('/Volumes/Samsung_T5/nsf_iwv/2020_01/EarlyV2_GM_NL_forced_damped_5xGM_particles.mat');
 
 tIndices = 1:4:length(t);
 
@@ -102,10 +102,10 @@ text(250,0.9,'Nonlinear')
 
 ylabel('diffusivity (m^2/s)')
 xlabel('rms distance (km)')
-ylim([0 1.0*maxDiffusivity])
+% ylim([0 1.0*maxDiffusivity])
 
 subplot(sp1)
-ylim([0 1.0*maxDiffusivity])
+% ylim([0 1.0*maxDiffusivity])
 
 packfig(2,1)
 % print('-depsc2', sprintf('../figures_2019_05/DiffusivityVsScaleLinNonlin_%s_%s.eps',diffusivityMetric,diffusivityMethod))

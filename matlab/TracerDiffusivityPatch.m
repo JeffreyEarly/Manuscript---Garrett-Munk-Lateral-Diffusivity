@@ -4,14 +4,14 @@ ReadOverNetwork = 0;
 if ReadOverNetwork == 1
     baseURL = '/Volumes/seattle_data1/cwortham/research/nsf_iwv/model_raw/';
 else
-    baseURL = '/Volumes/Samsung_T5/nsf_iwv/2020_01/';
+    baseURL = '/Volumes/Samsung_T5/nsf_iwv/2019_05/';
 %     baseURL = '/Users/jearly/Documents/ManuscriptRepositories/garrett-munk-lateral-diffusivity/data/2018_11/';
 end
 
 if strcmp(runtype,'linear')
     file = strcat(baseURL,'EarlyV2_GM_LIN_unforced_damped_restart');
 elseif strcmp(runtype,'nonlinear')
-    file = strcat(baseURL,'EarlyV2_GM_NL_forced_damped_5xGM');
+    file = strcat(baseURL,'EarlyV2_GM_NL_forced_damped_restart');
 else
     error('invalid run type.');
 end

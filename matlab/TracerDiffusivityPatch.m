@@ -1,4 +1,4 @@
-runtype = 'nonlinear';
+runtype = 'linear';
 ReadOverNetwork = 0;
 
 if ReadOverNetwork == 1
@@ -9,14 +9,14 @@ else
 end
 
 if strcmp(runtype,'linear')
-    file = strcat(baseURL,'EarlyV2_GM_LIN_unforced_damped_restart');
+    file = strcat(baseURL,'EarlyV2_GM_LIN_unforced_damped_01xGM');
 elseif strcmp(runtype,'nonlinear')
     file = strcat(baseURL,'EarlyV2_GM_NL_forced_damped_restart');
 else
     error('invalid run type.');
 end
 
-outputfile = sprintf('%s_tracer_patch.mat',file);
+outputfile = 'EarlyV2_GM_LIN_unforced_damped_01xGM_tracer_patch.mat'; % sprintf('%s_tracer_patch.mat',file);
 
 if ~exist(outputfile,'file')
     WM = WintersModel(file);

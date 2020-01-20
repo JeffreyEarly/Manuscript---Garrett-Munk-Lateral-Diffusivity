@@ -15,9 +15,10 @@ if strcmp(runtype,'nonlinear') == 1
     files{3} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_5xGM_particles.mat';
     nFiles = 3;
 else
-    energyLevel = 1.0;
-    files{1} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_LIN_unforced_damped_restart_particles.mat';
-    nFiles = 1;
+    energyLevel = [0.1; 1.0];
+    files{1} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_LIN_unforced_damped_01xGM_particles.mat';
+    files{2} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_LIN_unforced_damped_restart_particles.mat';
+    nFiles = 2;
 end
 
 t_particles = cell(nFiles,1);
@@ -65,9 +66,10 @@ if strcmp(runtype,'nonlinear') == 1
     files{2} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_restart_tracer_patch.mat';
     files{3} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_5xGM_tracer_patch.mat';
 else
-    energyLevel = 1.0;
-    files{1} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_LIN_unforced_damped_restart_tracer_patch.mat';
-    nFiles = 1;
+    energyLevel = [0.1; 1.0];
+    files{1} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_LIN_unforced_damped_01xGM_tracer_patch.mat';
+    files{2} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_LIN_unforced_damped_restart_tracer_patch.mat';
+    nFiles = 2;
 end
 
 t_tracer = cell(nFiles,1);
@@ -126,7 +128,7 @@ for iFile=1:nFiles
 end
 xlabel('days')
 packfig(nFiles,1)
-print('-depsc', sprintf('../figures_2020_01/LateralDispersion-vs-Energy.eps'))
+% print('-depsc', sprintf('../figures_2020_01/LateralDispersion-vs-Energy.eps'))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -143,5 +145,5 @@ xlabel('energy level (GM)')
 ylabel('\kappa (m^2/s)')
 title(sprintf('Lateral Diffusivity at (%d km)^2, kappa = %.2f GM^{%.2f}',round(sqrt(mean(r2_particles))*1e-3),C,m))
 legend('particles','tracer','Location','northwest') 
-print('-depsc', sprintf('../figures_2020_01/LateralDiffusivity-vs-Energy.eps'))
+% print('-depsc', sprintf('../figures_2020_01/LateralDiffusivity-vs-Energy.eps'))
 

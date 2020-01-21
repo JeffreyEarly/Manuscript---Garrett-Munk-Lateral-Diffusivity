@@ -8,6 +8,7 @@ LoadFigureDefaults;
 
 runtype = 'nonlinear';
 ReadOverNetwork = 0;
+iFile = 2;
 
 if ReadOverNetwork == 1
     baseURL = '/Volumes/seattle_data1/cwortham/research/nsf_iwv/model_raw/';
@@ -15,14 +16,23 @@ else
     baseURL = '/Volumes/Samsung_T5/nsf_iwv/';
 end
 
+energyLevel = [0.1; 1.0; 5.0];
 if strcmp(runtype,'linear')
-
+    files{1} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_LIN_unforced_damped_01xGM';
+    files{2} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_LIN_unforced_damped_restart';
+    files{3} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_LIN_unforced_damped_5xGM';
 elseif strcmp(runtype,'nonlinear')
-    load('/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_01xGM_decomp.mat');
-    file = strcat(baseURL,'EarlyV2_GM_NL_forced_damped_01xGM'); 
+    files{1} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_01xGM';
+    files{2} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_restart';
+    files{3} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_5xGM';
 else
     error('invalid run type.');
 end
+figureFolder = '/Volumes/Samsung_T5/nsf_iwv/figures';
+
+load(sprintf('%s_decomp.mat',files{iFile}));
+file = files{iFile};
+
 
 % we need this to compute the line of constant frequency
 WM = WintersModel(file);
@@ -41,20 +51,23 @@ ExampleVortexK = 55;
 % Compute the damping scales
 %
 
-dx = x(2)-x(1);
-dz = z(2)-z(1);
-nu_x = (-1)^(p+1)*power(dx/pi,2*p) / T_diss;
-nu_z = (-1)^(p+1)*power(dz/pi,2*p) / T_diss;
+% Kraig Winters uses an e-fold time to set \nu_x in the hypervicous
+% operator. We start by computing \nu_x and \nu_z.
+dx = wavemodel.x(2)-wavemodel.x(1);
+dz = wavemodel.z(2)-wavemodel.z(1);
+nu_x = (-1)^(WM.p_x+1)*power(dx/pi,2*WM.p_x) / WM.T_diss_x;
+nu_z = (-1)^(WM.p_z+1)*power(dz/pi,2*WM.p_z) / WM.T_diss_z;
 
 nK = length(wavemodel.k)/2 + 1;
 k_diss = abs(wavemodel.k(1:nK));
-j_diss = wavemodel.j; % start at 0, to help with contour drawing
+j_diss = 0:max(wavemodel.j); % start at 0, to help with contour drawing
 [K,J] = ndgrid(k_diss,j_diss);
-M = (2*pi/(max(j_diss)*dz))*J/2;
+M = (2*pi/(length(wavemodel.j)*dz))*J/2;
 
-lambda_x = nu_x*(sqrt(-1)*K).^(2*p);
-lambda_z = nu_z*(sqrt(-1)*M).^(2*p);
-R = exp(2*(lambda_x+lambda_z)*(t(end)-t(1)));
+lambda_x = nu_x*(sqrt(-1)*K).^(2*WM.p_x);
+lambda_z = nu_z*(sqrt(-1)*M).^(2*WM.p_y);
+tau = t(end)-t(1); tau = 86400/2;
+R = exp(2*(lambda_x+lambda_z)*(tau));
 
 % Let's contour the area that retains 90% of its value
 C = contourc(j_diss,k_diss,R,0.90*[1 1]);
@@ -116,7 +129,7 @@ colormap( cmocean('dense') );
 cb = colorbar('eastoutside');
 caxis([0 1])
 
-% print('-dpng', '-r300', sprintf('../figures_2019_05/WaveNonlinearity.png'))
+print('-dpng', '-r300', sprintf('%s/WaveNonlinearity_%dxGM.png', figureFolder, round(energyLevel(iFile)*10) ))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -150,4 +163,7 @@ colormap( cmocean('dense') );
 cb = colorbar('eastoutside');
 caxis([0 1])
 
+print('-dpng', '-r300', sprintf('%s/VortexNonlinearity_%dxGM.png', figureFolder, round(energyLevel(iFile)*10) ))
+
+% print('-dpng', '-r300', sprintf('figureFolder/VortexNonlinearity_%dxGM.png', round(energyLevel(iFile)*10) ))
 % print('-dpng', '-r300', sprintf('../figures_2019_05/VortexNonlinearity.png'))

@@ -24,13 +24,13 @@ for iFile=1:3
 %    D2 = mean((x_float-x_float(1,:)).^2 + (y_float-y_float(1,:)).^2,2);
 %    kappa(iFile) = LinearLeastSquaresFit(t_float,D2,1)/4;
    
-   D2 = mean((x-x(1,:)).^2 + (y-y(1,:)).^2,2);
-   kappa(iFile) = LinearLeastSquaresFit(t,D2,1)/4;
+%    D2 = mean((x-x(1,:)).^2 + (y-y(1,:)).^2,2);
+%    kappa(iFile) = LinearLeastSquaresFit(t,D2,1)/4;
    
 %    [r2_all, kappa_r_all] = PairwiseRelativeDiffusivity(t_float, x_float, y_float, 'powspec');
 %   kappa(iFile) = mean(kappa_r_all)/2;
-%    [r2_all, kappa_r_all] = PairwiseRelativeDiffusivityFromSlope(t, x, y, [-Inf Inf] );
-%    kappa(iFile) = kappa_r_all(1)/2;
+   [r2_all, kappa_r_all] = PairwiseRelativeDiffusivityFromSlope(t, x, y, [0 1685] );
+   kappa(iFile) = kappa_r_all(1)/2;
    
 end
 

@@ -1,5 +1,5 @@
 runtype = 'linear';
-ReadOverNetwork = 0;
+ReadOverNetwork = 1;
 
 if ReadOverNetwork == 1
     baseURL = '/Volumes/seattle_data1/cwortham/research/nsf_iwv/model_raw/';

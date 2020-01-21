@@ -12,13 +12,13 @@ ReadOverNetwork = 0;
 if ReadOverNetwork == 1
     baseURL = '/Volumes/seattle_data1/cwortham/research/nsf_iwv/model_raw/';
 else
-    baseURL = '/Volumes/Samsung_T5/nsf_iwv/2020_01/';
+    baseURL = '/Volumes/Samsung_T5/nsf_iwv/';
 end
 
 if strcmp(runtype,'linear')
 
 elseif strcmp(runtype,'nonlinear')
-    load('/Volumes/Samsung_T5/nsf_iwv/2020_01/EarlyV2_GM_NL_forced_damped_01xGM_decomp.mat');
+    load('/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_01xGM_decomp.mat');
     file = strcat(baseURL,'EarlyV2_GM_NL_forced_damped_01xGM'); 
 else
     error('invalid run type.');

@@ -11,16 +11,18 @@ end
 if strcmp(runtype,'linear')
     file = strcat(baseURL,'EarlyV2_GM_LIN_unforced_damped_restart');
 elseif strcmp(runtype,'nonlinear')
-    file = strcat(baseURL,'EarlyV2_GM_NL_forced_damped_restart');
+    file = strcat(baseURL,'EarlyV2_GM_NL_forced_damped_01xGM');
 else
     error('invalid run type.');
 end
 
 outputfile = sprintf('%s_tracer_column.mat',file);
 
-if ~exist(outputfile,'file')
-    WM = WintersModel(file);
+WM = WintersModel(file);
     wavemodel = WM.wavemodel;
+
+if ~exist(outputfile,'file')
+    
     
     s2 = WM.VariableFieldsFrom3DOutputFileAtIndex(1,'s2');
     
@@ -90,8 +92,6 @@ else
 end
 
 D2 = (m_xx+m_yy)/4;
-
-return
 
 % D2 = m_yy/2;
 kappa = zeros(size(D2,2),1);

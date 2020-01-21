@@ -1,3 +1,12 @@
+% Notes on January 19th, 2020
+%
+% Following along an isopycnal does improve the measure of concentration.
+% In fact, you find that the concentration of dye along an isopycnal varies
+% in 1 part per 10000, rather than 1 part per 100 when you compute
+% concentration along depth. So, that's a good fix! However, there is
+% *nothing* else that gets rid of the oscillations in the second moment. It
+% might be fair to say that these oscillations are simply real.
+
 runtype = 'nonlinear';
 ReadOverNetwork = 0;
 
@@ -16,6 +25,7 @@ else
 end
 
 outputfile = sprintf('%s_tracer_column_iso.mat',file);
+outputfile_ex = sprintf('%s_tracer_column_ex.mat',file);
 
 if ~exist(outputfile,'file')
     WM = WintersModel(file);
@@ -32,13 +42,17 @@ if ~exist(outputfile,'file')
 %     dV(1) = dV(1)/2;
 %     dV(end) = dV(end)/2;
 %     
-    dV = zeros(size(X));
-    
-    % background density
-    RHOBAR = zeros(size(X)) + shiftdim(wavemodel.rhobar,-2);
+
+
+dX = zeros(size(X));
+dY = zeros(size(X));
+dZ = zeros(size(X));
+
+% background density
+RHOBAR = zeros(size(X)) + shiftdim(wavemodel.rhobar,-2);
     
     nFiles = WM.NumberOf3DOutputFiles;
-    fileIncrements = 1:2:nFiles;
+    fileIncrements = 1:nFiles;
     
     nT = length(fileIncrements);
     t = zeros(nT,1);
@@ -48,6 +62,14 @@ if ~exist(outputfile,'file')
     m_xx = zeros(nT,wavemodel.Nz);
     m_xy = zeros(nT,wavemodel.Nz);
     m_yy = zeros(nT,wavemodel.Nz);
+    
+    iIso = 22;
+    % dye concentration along an isopycnal
+    Cn = zeros(nT,wavemodel.Nx, wavemodel.Ny);
+    XC = X(:,:,iIso);
+    YC = Y(:,:,iIso);
+    XisoC = zeros(nT,wavemodel.Nx, wavemodel.Ny);
+    YisoC = zeros(nT,wavemodel.Nx, wavemodel.Ny);
     
     startTime = datetime('now');
     for iFile = 1:length(fileIncrements)
@@ -76,17 +98,31 @@ if ~exist(outputfile,'file')
             end
         end
         
-        dV(:,:,1) = Z_isopycnal(:,:,2)-Z_isopycnal(:,:,1);
-        dV(:,:,2:(end-1)) = (Z_isopycnal(:,:,3:end)-Z_isopycnal(:,:,1:(end-2)))/2;
-        dV(:,:,end) = Z_isopycnal(:,:,end)-Z_isopycnal(:,:,end-1);
+        % distance between isopycnals
+        dZ(:,:,1) = Z_isopycnal(:,:,2)-Z_isopycnal(:,:,1);
+        dZ(:,:,2:(end-1)) = (Z_isopycnal(:,:,3:end)-Z_isopycnal(:,:,1:(end-2)))/2;
+        dZ(:,:,end) = Z_isopycnal(:,:,end)-Z_isopycnal(:,:,end-1);
         
-        dV = dx*dy*dV;
+        % distance along isopycnals
+        Xiso = cumsum(sqrt(dx^2 + dZ.^2),1)-dx;
+        Yiso = cumsum(sqrt(dy^2 + dZ.^2),2)-dy;
+        
+        % distance increment, ignoring end points
+        dX(2:(end-1),:,:) = (Xiso(3:end,:,:) - Xiso(1:(end-2),:,:))/2;
+        dY(:,2:(end-1),:) = (Yiso(:,3:end,:) - Yiso(:,1:(end-2),:))/2;
+        
+        dV = dX.*dY.*dZ;
         
         s2_isopycnal = interpn(X,Y,Z,s2,X,Y,Z_isopycnal,'linear');
         
         % std(m,0,1)./mean(m,1) = O(1e-4), so pretty damn good. Without
         % handling isopycnals, we get O(1e-2)
         m(iFile,:) = squeeze(sum(sum(s2_isopycnal.*dV,1),2));
+        
+        
+        Cn(iFile,:,:) = s2_isopycnal(:,:,iIso).*dV(:,:,iIso)/m(iFile,iIso);
+        XisoC(iFile,:,:) = Xiso(:,:,iIso);
+        YisoC(iFile,:,:) = Yiso(:,:,iIso);
         
         % Need to compute the length along the isopycnal?
         % sum(abs(Z_isopycnal(:,1,64)-wavemodel.z(64))) is 2 km, which is
@@ -103,6 +139,7 @@ if ~exist(outputfile,'file')
 
     end
 
+    save(outputfile_ex,'t','Cn','XC', 'YC','XisoC','YisoC');
     save(outputfile,'t','m','m_x', 'm_y','m_xx','m_xy','m_yy');
 else
     load(outputfile);
@@ -110,8 +147,6 @@ end
 
 
 D2 = (m_xx+m_yy)/4;
-
-return
 
 % D2 = m_yy/2;
 kappa = zeros(size(D2,2),1);

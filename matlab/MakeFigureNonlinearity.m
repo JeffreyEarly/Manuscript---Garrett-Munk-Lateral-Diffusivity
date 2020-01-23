@@ -8,7 +8,7 @@ LoadFigureDefaults;
 
 runtype = 'nonlinear';
 ReadOverNetwork = 0;
-iFile = 2;
+iFile = 1;
 
 if ReadOverNetwork == 1
     baseURL = '/Volumes/seattle_data1/cwortham/research/nsf_iwv/model_raw/';

@@ -13,12 +13,14 @@
 %
 % January 21st, 2020   Version 1.0
 
-outputInterval = 15*60;
 maxTime = 10.0*86400; %10*outputInterval;
 interpolationMethod = 'spline';
 shouldOutputEulerianFields = 0;
+shouldZeroDampingRegion = 1;
 nLevels = 5;
+% note = 'all vortex components removed';
 
+wintersModelFile = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_01xGM';
 outputfolder = '/Volumes/Samsung_T5/nsf_iwv';
 
 precision = 'single';
@@ -39,7 +41,7 @@ end
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-wintersModelFile = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_LIN_unforced_damped_restart';
+
 WM = WintersModel(wintersModelFile);
 wavemodel = WM.wavemodel;
 
@@ -47,6 +49,7 @@ wavemodel = WM.wavemodel;
 wavemodel.InitializeWithHorizontalVelocityAndDensityPerturbationFields(t,u,v,rho_prime);
 
 [t_float,x_float,y_float,z_float] = WM.ParticleTrajectories();
+outputInterval = mode(diff(t_float));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -54,12 +57,27 @@ wavemodel.InitializeWithHorizontalVelocityAndDensityPerturbationFields(t,u,v,rho
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-k_max = 0.0016;
-j_max = 47;
+if shouldZeroDampingRegion == 1
+    k_max = 0.0018;
+    j_max = 52;
+else
+    k_max = max(wavemodel.Kh(:));
+    j_max = max(wavemodel.j);
+end
 
 wavemodel.Amp_plus(wavemodel.Kh > k_max | wavemodel.J > j_max ) = 0;
 wavemodel.Amp_minus(wavemodel.Kh > k_max | wavemodel.J > j_max) = 0;
 wavemodel.B(wavemodel.Kh > k_max | wavemodel.J > j_max) = 0;
+
+wavemodel.u_g(wavemodel.Kh > k_max | wavemodel.J > j_max) = 0;
+wavemodel.v_g(wavemodel.Kh > k_max | wavemodel.J > j_max) = 0;
+wavemodel.zeta_g(wavemodel.Kh > k_max | wavemodel.J > j_max) = 0;
+
+% wavemodel.B = [];
+% wavemodel.B0 = [];
+% wavemodel.u_g = 0;
+% wavemodel.v_g = 0;
+% wavemodel.zeta_g = 0;
 
 wavemodel.GenerateWavePhases(wavemodel.Amp_plus,wavemodel.Amp_minus);
 
@@ -105,10 +123,12 @@ end
 deltaT = outputInterval/ceil(outputInterval/deltaT);
 fprintf('Rounding to match the output interval dt: %.2f\n',deltaT);
 
-t = (0:outputInterval:maxTime)';
-if t(end) < period
-    t(end+1) = period;
-end
+% t = (0:outputInterval:maxTime)';
+% if t(end) < period
+%     t(end+1) = period;
+% end
+
+t = t_float;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -116,7 +136,7 @@ end
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-filepath = sprintf('%s/DiffusivityExperiment_%s_%dx%dx%d.nc', outputfolder,datestr(datetime('now'),'yyyy-mm-ddTHHMMSS'),wavemodel.Nx,wavemodel.Ny,wavemodel.Nz);
+filepath = sprintf('%s_linrun_%s_%dx%dx%d.nc', wintersModelFile,datestr(datetime('now'),'yyyy-mm-ddTHHMMSS'),wavemodel.Nx,wavemodel.Ny,wavemodel.Nz);
 
 % Apple uses 1e9 bytes as 1 GB (not the usual multiples of 2 definition)
 totalFields = 4;
@@ -175,7 +195,10 @@ netcdf.putAtt(ncid,netcdf.getConstant('NC_GLOBAL'), 'CreationDate', datestr(date
 
 % netcdf.putAtt(ncid,netcdf.getConstant('NC_GLOBAL'), 'max-wavelength-in-spectrum', maxWavelength);
 netcdf.putAtt(ncid,netcdf.getConstant('NC_GLOBAL'), 'nFloatLevels', nLevels);
-% netcdf.putAtt(ncid,netcdf.getConstant('NC_GLOBAL'), 'kappa', kappa);
+netcdf.putAtt(ncid,netcdf.getConstant('NC_GLOBAL'), 'j_max', j_max);
+netcdf.putAtt(ncid,netcdf.getConstant('NC_GLOBAL'), 'k_max', k_max);
+% netcdf.putAtt(ncid,netcdf.getConstant('NC_GLOBAL'), 'note', note)
+netcdf.putAtt(ncid,netcdf.getConstant('NC_GLOBAL'), 'restarted_from', wintersModelFile);
 netcdf.putAtt(ncid,netcdf.getConstant('NC_GLOBAL'), 'interpolation-method', interpolationMethod);
 
 % End definition mode
@@ -195,7 +218,7 @@ startTime = datetime('now');
 fprintf('Starting numerical simulation on %s\n', datestr(startTime));
 integrator = Integrator( f, xyz0, deltaT);
 % profile on
-for iTime=1:3%length(t)
+for iTime=1:length(t)
     if iTime == 2
        startTime = datetime('now'); 
     end

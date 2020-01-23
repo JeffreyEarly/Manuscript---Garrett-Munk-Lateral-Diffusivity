@@ -1,4 +1,4 @@
-runtype = 'linear';
+runtype = 'nonlinear';
 ReadOverNetwork = 0;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -9,11 +9,13 @@ ReadOverNetwork = 0;
 
 
 if strcmp(runtype,'nonlinear') == 1
-    energyLevel = [0.1; 1.0; 5.0];
+    energyLevel = [0.1; 0.3; 1.0; 2.0; 5.0];
     files{1} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_01xGM_particles.mat';
-    files{2} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_restart_particles.mat';
-    files{3} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_5xGM_particles.mat';
-    nFiles = 3;
+    files{2} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_03xGM_particles.mat';
+    files{3} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_restart_particles.mat';
+    files{4} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_2xGM_particles.mat';
+    files{5} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_5xGM_particles.mat';
+    nFiles = 5;
 else
     energyLevel = [0.1; 1.0; 5.0];
     files{1} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_LIN_unforced_damped_01xGM_particles.mat';
@@ -65,9 +67,13 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if strcmp(runtype,'nonlinear') == 1
+    energyLevel = [0.1; 0.3; 1.0; 2.0; 5.0];
     files{1} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_01xGM_tracer_patch.mat';
-    files{2} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_restart_tracer_patch.mat';
-    files{3} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_5xGM_tracer_patch.mat';
+    files{2} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_03xGM_tracer_patch.mat';
+    files{3} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_restart_tracer_patch.mat';
+    files{4} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_2xGM_tracer_patch.mat';
+    files{5} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_5xGM_tracer_patch.mat';
+    nFiles = 5;
 else
     energyLevel = [0.1; 1.0; 5.0];
     files{1} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_LIN_unforced_damped_01xGM_tracer_patch.mat';
@@ -80,7 +86,7 @@ t_tracer = cell(nFiles,1);
 D2_tracer = cell(nFiles,1);
 r2_tracer = zeros(nFiles,1);
 kappa_tracer = zeros(size(energyLevel));
-for iFile=1:3
+for iFile=1:nFiles
    load(files{iFile});
    
    t_tracer{iFile} = t;
@@ -110,6 +116,7 @@ end
 
 % Relationship between diffusivity and energy
 [p,S,mu]=polyfit([log(energyLevel); log(energyLevel)],[log(kappa_particles); log(kappa_tracer)],1);
+[p,S,mu]=polyfit([log(energyLevel(1:4))],[log(kappa_particles(1:4))],1);
 m = p(1)/mu(2);
 C = exp(p(2)-p(1)*mu(1)/mu(2));
 

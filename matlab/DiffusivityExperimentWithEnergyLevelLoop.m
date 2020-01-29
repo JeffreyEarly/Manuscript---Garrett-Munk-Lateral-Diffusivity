@@ -105,9 +105,10 @@ for iEnergyLevel = 1:length(GMReferenceLevels)
     dx = wavemodel.x(2)-wavemodel.x(1);
     dy = wavemodel.y(2)-wavemodel.y(1);
     nLevels = 5;
-    N = floor(N/6);
-    x_float = (0:N-1)*2*dx;
-    y_float = (0:N-1)*2*dy;
+    float_stride = 2;
+    N_float = floor(N/3/float_stride);
+    x_float = (0:N_float-1)*float_stride*dx;
+    y_float = (0:N_float-1)*float_stride*dy;
     z_float = (0:nLevels-1)*(-Lz/(2*(nLevels-1)));
     
     % nudge towards the center of the domain. This isn't necessary, but does

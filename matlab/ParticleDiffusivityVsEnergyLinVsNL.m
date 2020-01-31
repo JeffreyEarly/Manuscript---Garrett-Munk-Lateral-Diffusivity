@@ -9,11 +9,11 @@ for i=1:2
     %
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     if i == 1
-        files{1} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_01xGM';
-        files{2} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_03xGM';
-        files{3} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_restart';
-        files{4} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_2xGM';
-        files{5} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_5xGM';
+        files{1} = '/Volumes/Samsung_T5/nsf_iwv/WintersNonlinear/EarlyV2_GM_NL_forced_damped_01xGM';
+        files{2} = '/Volumes/Samsung_T5/nsf_iwv/WintersNonlinear/EarlyV2_GM_NL_forced_damped_03xGM';
+        files{3} = '/Volumes/Samsung_T5/nsf_iwv/WintersNonlinear/EarlyV2_GM_NL_forced_damped_restart';
+        files{4} = '/Volumes/Samsung_T5/nsf_iwv/WintersNonlinear/EarlyV2_GM_NL_forced_damped_2xGM';
+        files{5} = '/Volumes/Samsung_T5/nsf_iwv/WintersNonlinear/EarlyV2_GM_NL_forced_damped_5xGM';
         nFiles = 5;
         
         energyLevelMeasured = zeros(nFiles,1);
@@ -30,11 +30,11 @@ for i=1:2
         end
         
         energyLevel = energyLevelMeasured;
-        files{1} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_01xGM_particles.mat';
-        files{2} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_03xGM_particles.mat';
-        files{3} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_restart_particles.mat';
-        files{4} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_2xGM_particles.mat';
-        files{5} = '/Volumes/Samsung_T5/nsf_iwv/EarlyV2_GM_NL_forced_damped_5xGM_particles.mat';
+        files{1} = '/Volumes/Samsung_T5/nsf_iwv/WintersNonlinear/EarlyV2_GM_NL_forced_damped_01xGM_particles.mat';
+        files{2} = '/Volumes/Samsung_T5/nsf_iwv/WintersNonlinear/EarlyV2_GM_NL_forced_damped_03xGM_particles.mat';
+        files{3} = '/Volumes/Samsung_T5/nsf_iwv/WintersNonlinear/EarlyV2_GM_NL_forced_damped_restart_particles.mat';
+        files{4} = '/Volumes/Samsung_T5/nsf_iwv/WintersNonlinear/EarlyV2_GM_NL_forced_damped_2xGM_particles.mat';
+        files{5} = '/Volumes/Samsung_T5/nsf_iwv/WintersNonlinear/EarlyV2_GM_NL_forced_damped_5xGM_particles.mat';
         nFiles = 5;
     else
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -43,13 +43,13 @@ for i=1:2
         %
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         runtype = 'linear';
-        energyLevel = 10.^[-1.0; -0.5; 0; 0.5; 1.0];
-        files{1} = '/Volumes/MoreStorage/DiffusivityExperiment_GM01_128x128x129_particles.mat';
-        files{2} = '/Volumes/MoreStorage/DiffusivityExperiment_GM03_128x128x129_particles.mat';
-        files{3} = '/Volumes/MoreStorage/DiffusivityExperiment_GM10_128x128x129_particles.mat';
-        files{4} = '/Volumes/MoreStorage/DiffusivityExperiment_GM32_128x128x129_particles.mat';
-        files{5} = '/Volumes/MoreStorage/DiffusivityExperiment_GM100_128x128x129_particles.mat';
-        nFiles = 5;
+        energyLevel = 10.^[-1.0; -0.5; 0; 0.5];
+        files{1} = '/Volumes/Samsung_T5/nsf_iwv/EarlyLinear/DiffusivityExperiment_GM01_128x128x129_particles.mat';
+        files{2} = '/Volumes/Samsung_T5/nsf_iwv/EarlyLinear/DiffusivityExperiment_GM03_128x128x129_particles.mat';
+        files{3} = '/Volumes/Samsung_T5/nsf_iwv/EarlyLinear/DiffusivityExperiment_GM10_128x128x129_particles.mat';
+        files{4} = '/Volumes/Samsung_T5/nsf_iwv/EarlyLinear/DiffusivityExperiment_GM32_128x128x129_particles.mat';
+        files{5} = '/Volumes/Samsung_T5/nsf_iwv/EarlyLinear/DiffusivityExperiment_GM100_128x128x129_particles.mat';
+        nFiles = 4;
     end
     
     t_particles = cell(nFiles,1);
@@ -110,3 +110,5 @@ ylabel('\kappa (m^2/s)')
 title(sprintf('Lateral Diffusivity at (%d km)^2',round(sqrt(mean(r2_particles))*1e-3)))
 legend('nonlinear', sprintf('nonlinear fit kappa = %.2f GM^{%.2f}',C(1),m(1)),'linear', sprintf('linear fit kappa = %.2f GM^{%.2f}',C(2),m(2)),'Location','northwest') 
 xlim([0.08 12])
+
+% print('-depsc','LateralDiffusivityOfParticles-WintersNL-EarlyLin.eps')

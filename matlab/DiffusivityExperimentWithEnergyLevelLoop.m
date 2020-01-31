@@ -75,26 +75,31 @@ end
 wavemodel.Amp_plus(wavemodel.Kh > k_max | wavemodel.J > j_max ) = 0;
 wavemodel.Amp_minus(wavemodel.Kh > k_max | wavemodel.J > j_max) = 0;
 
-% keep a local copy
+% keep a local copy of all waves
 A_plus = wavemodel.Amp_plus;
 A_minus = wavemodel.Amp_minus;
+k_ext = wavemodel.k_ext;
+l_ext = wavemodel.l_ext;
+j_ext = wavemodel.j_ext;
+phi_ext = wavemodel.phi_ext;
+A_ext = wavemodel.U_ext.*sqrt(wavemodel.h_ext);
+norm = wavemodel.norm_ext;
 
 for iEnergyLevel = 1:length(GMReferenceLevels)
     GMReferenceLevel = GMReferenceLevels(iEnergyLevel);
     
     wavemodel.Amp_plus = sqrt(GMReferenceLevel)*A_plus;
     wavemodel.Amp_minus = sqrt(GMReferenceLevel)*A_minus;
-    wavemodel.GenerateWavePhases(wavemodel.Amp_plus,wavemodel.Amp_minus);
-
-    period = 2*pi/wavemodel.N0;
-    if shouldOutputEulerianFields == 1
-        [u,v] = wavemodel.VelocityFieldAtTime(0.0);
-        U = max(max(max( sqrt(u.*u + v.*v) )));
-    else
-        U = 0.1;
-    end
-    fprintf('Max fluid velocity: %.2f cm/s\n',U*100);
+    wavemodel.GenerateWavePhases(wavemodel.Amp_plus,wavemodel.Amp_minus); 
+    wavemodel.SetExternalWavesWithWavenumbers(k_ext,l_ext,j_ext,phi_ext,A_ext*sqrt(GMReferenceLevel),norm);
     
+    [E_tot,E_gridded,E_ext] = wavemodel.EnergyLevel();
+    fprintf('GM energy level: %.2fGM, split between %.2fGM/%.2fGM gridded/external\n',E_tot,E_gridded,E_ext);
+    
+    period = 2*pi/wavemodel.N0;
+    [u,v] = wavemodel.VelocityFieldAtTime(0.0);
+    U = max(max(max( sqrt(u.*u + v.*v) )));
+    fprintf('Max fluid velocity: %.2f cm/s\n',U*100);
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %
@@ -224,6 +229,9 @@ for iEnergyLevel = 1:length(GMReferenceLevels)
     netcdf.putAtt(ncid,netcdf.getConstant('NC_GLOBAL'), 'j_max', j_max);
     netcdf.putAtt(ncid,netcdf.getConstant('NC_GLOBAL'), 'k_max', k_max);
     netcdf.putAtt(ncid,netcdf.getConstant('NC_GLOBAL'), 'notes', notes);
+    netcdf.putAtt(ncid,netcdf.getConstant('NC_GLOBAL'), 'E_gm', E_tot);
+    netcdf.putAtt(ncid,netcdf.getConstant('NC_GLOBAL'), 'E_gm_gridded', E_gridded);
+    netcdf.putAtt(ncid,netcdf.getConstant('NC_GLOBAL'), 'E_gm_ext', E_ext);
     netcdf.putAtt(ncid,netcdf.getConstant('NC_GLOBAL'), 'interpolation-method', interpolationMethod);
     
     % End definition mode

@@ -1,5 +1,5 @@
 GMEnergyLevel = 10^(0.5);
-fileWithOutExtension = sprintf('/Volumes/MoreStorage/DiffusivityExperiment_GM%02d_128x128x129',round(GMEnergyLevel*10));
+fileWithOutExtension = sprintf('/Users/jearly/Documents/nsf_iwv/DiffusivityExperiment_GM%02d_256x256x129',round(GMEnergyLevel*10));
 file = sprintf('%s.nc',fileWithOutExtension);
 
 t=ncread(file,'t');

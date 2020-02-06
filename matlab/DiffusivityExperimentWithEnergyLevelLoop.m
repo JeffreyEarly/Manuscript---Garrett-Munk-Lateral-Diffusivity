@@ -12,7 +12,7 @@
 % April 12th, 2017      Version 1.0
 % January 23rd, 2020    Focusing on spline vs linear, small ffts
 
-N = 128;
+N = 256;
 aspectRatio = 1;
 
 L = 139620;
@@ -34,9 +34,9 @@ maxTime = 10.0*86400; %10*outputInterval;
 interpolationMethod = 'spline';
 shouldZeroDampingRegion = 1;
 shouldOutputEulerianFields = 0;
-notes='Full resolution L/1, to start convengence comparison.';
+notes='Double resolution of the previous runs.';
 
-outputfolder = '/Volumes/MoreStorage';
+outputfolder = '/Users/jearly/Documents/nsf_iwv';
 
 precision = 'single';
 
